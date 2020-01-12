@@ -14,9 +14,10 @@ DROP PROCEDURE IF EXISTS CreatorGroup_student;
 DROP PROCEDURE IF EXISTS verfgrupovacio;
 DROP PROCEDURE IF EXISTS MasEncanta;
 DROP PROCEDURE IF EXISTS MenosEncanta;
-
+DROP PROCEDURE IF EXISTS GruposExistente;
 DROP PROCEDURE IF EXISTS verChallenges;
 DROP PROCEDURE IF EXISTS challengesCategoria;
+DROP PROCEDURE IF EXISTS EliminarGroup_student;
 
 /* ------------------------------------------------------------------ */
 
@@ -61,6 +62,22 @@ begin
     end if;
 end;
 %% Delimiter ;
+
+Delimiter %%
+create procedure EliminarGroup_student(in group_ID int, in student_ID int)
+begin
+    if exists ( select 0 from Group_student gs
+		where gs.group_challenges_ID = group_ID and gs.student_ID = student_ID) then
+			delete from Group_student where Group_student.student_ID = student_ID and  Group_student.group_challenges_ID = group_ID; 
+			select 1;
+	else
+            select 0;
+    end if;
+end;
+%% Delimiter ;
+
+
+
 
 /* ------------------------------------------------------------------ */
 
@@ -194,19 +211,24 @@ end;
 %% Delimiter ;
 
 -- Procedure que crea grupos
- Delimiter %%
- create procedure CreatorGroup(in code_challenges int,in date_creation date,in groupname varchar(30),in description varchar(160), in url_whatsapp varchar(60),out Realizado boolean)
+Delimiter // 
+create procedure GruposExistente(in groupName varchar(30))
+begin 
+	 if exists ( select 1 from group_by_challenge gc where gc.groupname = groupName ) then
+			select 1;
+	 else
+            select 0;
+    end if;	
+end //
+delimiter;
+
+ Delimiter //
+create procedure CreatorGroup( in date_creation date,in groupname varchar(30),in description varchar(160), in url_whatsapp varchar(60))
 begin
-		if NOT EXISTS (Select g.groupname from Group_Challenges as s
-						join group_by_challenge as g on g.group_challenges_ID=s.group_challenges_ID
-						where s.code_challenges=code_challenges and g.groupname=groupname) then
 		insert into group_by_challenge values (default,date_creation,groupname,description,url_whatsapp);
-        set Realizado := true;
-        else
-        set Realizado := false;
-        end if;
+        select 1;
 end;
-%% Delimiter ;
+// Delimiter ;
 
 /*
 -- Procedure que crea relacion Challenge-estuduante
@@ -259,5 +281,3 @@ begin
 	where count(g.student_ID) = 0);
 end;
 %% Delimiter ;*/
-
-
