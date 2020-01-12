@@ -3,8 +3,10 @@ package main
 import (
 	"database/sql"
 	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
+	"time"
 
 	_ "github.com/go-sql-driver/mysql" // DEBEN INSTALAR EL DRIVER MEDIANTE: go get -u github.com/go-sql-driver/mysql
 )
@@ -19,19 +21,18 @@ type Challenge struct {
 	URL       string `json:"url"`
 	Info      string `json:"Info"`
 	Categoria string `json:"Categoria"`
-
 }
 
 type Grupos struct {
-	NombreGrupo string `json:"GrupoNombre"`
-	DESCRIPCION string `json:"Descripcion"`
-	group_challenges_ID string `json:"CodeGrupo"`
-	date_creation string `json: "FechaGrupo"`
-	url_wp string `json:"url_whatsapp"`
+	NombreGrupo       string `json:"GrupoNombre"`
+	Descripcion       string `json:"Descripcion"`
+	GroupChallengesID string `json:"CodeGrupo"`
+	FechaCreacion     string `json: "FechaGrupo"`
+	UrlWp             string `json:"url_whatsapp"`
 }
 
 // !!! user:password@tcp(127.0.0.1:3306)/database ¡¡¡
-var configuracionMysql = "root:@tcp(127.0.0.1:3306)/groupchallenges"
+var configuracionMysql = "root:mysql@tcp(127.0.0.1:3306)/groupchallenges"
 var puertoServidor = "9000"
 
 func main() {
@@ -42,11 +43,11 @@ func main() {
 	http.HandleFunc("/obtenerChallengesCategoria", obtenerChallengesCategoria)
 	http.HandleFunc("/unirseChallenge", unirseChallenge)
 	http.HandleFunc("/unirseGrupo", unirseGrupo)
-	http.HandleFunc("/obtenerGruposChallenges",obtenerGruposChallenges)	
-	http.HandleFunc("/MeEncantaChallenge", MeEncantaChallenge)
-	http.HandleFunc("/GruposEstudiante",GruposEstudiante)
-	http.HandleFunc("/crearGrupo",crearGrupo)
-	http.HandleFunc("/EliminarGrupoChallenge",EliminarGrupoChallenge)
+	http.HandleFunc("/obtenerGruposChallenges", obtenerGruposChallenges) // error
+	http.HandleFunc("/meEncantaChallenge", meEncantaChallenge)           // error
+	http.HandleFunc("/gruposEstudiante", gruposEstudiante)               // error
+	http.HandleFunc("/crearGrupo", crearGrupo)                           // error
+	http.HandleFunc("/eliminarGrupoChallenge", eliminarGrupoChallenge)
 	// En lugar de localhost puede ir la ip del servidor. Ademas es obligatorio desbloquear el puerto 9000
 	log.Fatal(http.ListenAndServe("localhost:"+puertoServidor, nil))
 }
@@ -55,6 +56,9 @@ func main() {
 func mensajeFalloServidor(mensaje int) map[string]int {
 	var respuesta map[string]int
 	if mensaje == 1 {
+		fmt.Println("***Error***")
+		fmt.Println(time.Now())
+		fmt.Println("***********")
 		respuesta = map[string]int{"respuesta": 0}
 	} else if mensaje == 2 {
 		respuesta = map[string]int{"respuesta": 1}
@@ -64,7 +68,7 @@ func mensajeFalloServidor(mensaje int) map[string]int {
 	return respuesta
 }
 
-// SERVICIOS
+// Servicios hechos por Bryan
 func obtenerChallenges(w http.ResponseWriter, r *http.Request) {
 
 	db, err := sql.Open("mysql", configuracionMysql)
@@ -223,8 +227,9 @@ func unirseGrupo(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func obtenerGruposChallenges(w http.ResponseWriter, r *http.Request){
-	
+// Servicios hechos por Francisco
+func obtenerGruposChallenges(w http.ResponseWriter, r *http.Request) {
+
 	db, err := sql.Open("mysql", configuracionMysql)
 
 	if err != nil {
@@ -234,7 +239,7 @@ func obtenerGruposChallenges(w http.ResponseWriter, r *http.Request){
 		jsonData := []byte(`{"idChallenge":2}`)
 		var data map[string]interface{}
 		json.Unmarshal([]byte(jsonData), &data)
-		results, err := db.Query("call gruposxChallenge(?)",data["idChallenge"])
+		results, err := db.Query("call gruposxChallenge(?)", data["idChallenge"])
 
 		if err != nil {
 			json.NewEncoder(w).Encode(mensajeFalloServidor(1))
@@ -242,11 +247,12 @@ func obtenerGruposChallenges(w http.ResponseWriter, r *http.Request){
 		} else {
 			var lista = make([]Grupos, 0)
 			for results.Next() {
-				var groupnombre string
-				var url_wp string
-				var description string
-				err = results.Scan(&groupnombre, &url_wp, &description )
-				grupos := Grupos{NombreGrupo: groupnombre, url_wp: url_wp, DESCRIPCION: description}
+				var grupoNombre string
+				var urlWp string
+				var descripcion string
+
+				err = results.Scan(&grupoNombre, &urlWp, &descripcion)
+				grupos := Grupos{NombreGrupo: grupoNombre, UrlWp: urlWp, Descripcion: descripcion}
 				lista = append(lista, grupos)
 
 				if err != nil {
@@ -258,16 +264,19 @@ func obtenerGruposChallenges(w http.ResponseWriter, r *http.Request){
 	}
 }
 
-func MeEncantaChallenge(w http.ResponseWriter, r *http.Request){
+func meEncantaChallenge(w http.ResponseWriter, r *http.Request) {
 	db, err := sql.Open("mysql", configuracionMysql)
 	if err != nil {
 		json.NewEncoder(w).Encode(mensajeFalloServidor(1))
 	} else {
 		defer db.Close()
-		jsonData:=[]byte(`{"idChallenge":3}`)
+
+		jsonData := []byte(`{"idChallenge":3}`)
 		var data map[string]interface{}
 		json.Unmarshal([]byte(jsonData), &data)
-		results, err := db.Query("call MasEncanta(?)",data["idChallenge"])
+
+		results, err := db.Query("call MasEncanta(?)", data["idChallenge"])
+
 		if err != nil {
 			json.NewEncoder(w).Encode(mensajeFalloServidor(1))
 		} else {
@@ -287,61 +296,71 @@ func MeEncantaChallenge(w http.ResponseWriter, r *http.Request){
 			}
 		}
 	}
-	
 }
 
-func GruposEstudiante(w http.ResponseWriter, r *http.Request){
+func gruposEstudiante(w http.ResponseWriter, r *http.Request) {
 	db, err := sql.Open("mysql", configuracionMysql)
 	if err != nil {
 		json.NewEncoder(w).Encode(mensajeFalloServidor(1))
 	} else {
 		defer db.Close()
-		jsonData:=[]byte(`{"idEstudiante":1}`)
+
+		jsonData := []byte(`{"idEstudiante":1}`)
 		var data map[string]interface{}
 		json.Unmarshal([]byte(jsonData), &data)
-		results, err := db.Query("call CrearVistaGrupoChallenge(?)",data["idEstudiante"])
+
+		results, err := db.Query("call CrearVistaGrupoChallenge(?)", data["idEstudiante"])
+
 		if err != nil {
 			json.NewEncoder(w).Encode(mensajeFalloServidor(1))
 		} else {
 			var lista = make([]Grupos, 0)
 			for results.Next() {
-				var group_challenges_ID string 
-				var groupname string
-				var description string
-				var url_whatsapp string
-				var date_creation string
-				err = results.Scan(&groupname, &url_whatsapp, &description, &date_creation, &group_challenges_ID)
-				grupos := Grupos{NombreGrupo: groupname, url_wp: url_whatsapp, DESCRIPCION: description, date_creation: date_creation, group_challenges_ID: group_challenges_ID}
-				lista = append(lista,grupos)
+				var groupChallengesID string
+				var nombreGrupo string
+				var descripcion string
+				var urlWhatsapp string
+				var fechaCreacion string
+
+				err = results.Scan(&nombreGrupo, &urlWhatsapp, &descripcion, &fechaCreacion, &groupChallengesID)
+
+				grupo := Grupos{NombreGrupo: nombreGrupo, UrlWp: urlWhatsapp, Descripcion: descripcion,
+					FechaCreacion: fechaCreacion, GroupChallengesID: groupChallengesID}
+
+				lista = append(lista, grupo)
 				if err != nil {
 					json.NewEncoder(w).Encode(mensajeFalloServidor(1))
-					} 
 				}
-				json.NewEncoder(w).Encode(lista)
 			}
-		}	
+			json.NewEncoder(w).Encode(lista)
+		}
+	}
 }
 
-func crearGrupo(w http.ResponseWriter, r *http.Request){
+func crearGrupo(w http.ResponseWriter, r *http.Request) {
 	db, err := sql.Open("mysql", configuracionMysql)
 	if err != nil {
 		json.NewEncoder(w).Encode(mensajeFalloServidor(1))
 	} else {
 		defer db.Close()
-		jsonData:=[]byte(`{"nombreGrupo":"Amigos","date":"2006-01-02","Descripcion":"Somos los mejores al usar Golang", "url_wp":"www.whatsaap/2DSAADUYUDSAD..."}`)
+
+		jsonData := []byte(`{"nombreGrupo":"Amigos","fecha":"2006-01-02","descripcion":"Somos los mejores al usar Golang", "urlWp":"www.whatsaap/2DSAADUYUDSAD..."}`)
 		var data map[string]interface{}
 		json.Unmarshal([]byte(jsonData), &data)
-		results, err := db.Query("call GruposExistente(?)",data["nombreGrupo"])
+
+		results, err := db.Query("call GruposExistente(?)", data["nombreGrupo"])
+
 		if err != nil {
 			json.NewEncoder(w).Encode(mensajeFalloServidor(1))
-		} else{
+		} else {
 			var respuesta int
 			for results.Next() {
 				err = results.Scan(&respuesta)
-				break;
+				break
 			}
-			if respuesta ==0 {
-				results1, err1 := db.Query("call CreatorGroup(?,?,?,?)",data["date"],data["nombreGrupo"],data["Descripcion"],data["url_wp"])
+			if respuesta == 0 {
+				results1, err1 := db.Query("call CreatorGroup(?,?,?,?)", data["fecha"], data["nombreGrupo"],
+					data["descripcion"], data["urlWp"])
 				if err1 != nil {
 					json.NewEncoder(w).Encode(mensajeFalloServidor(1))
 				} else {
@@ -349,24 +368,25 @@ func crearGrupo(w http.ResponseWriter, r *http.Request){
 						var respond int
 						err = results1.Scan(&respond)
 						if err1 != nil {
-						json.NewEncoder(w).Encode(mensajeFalloServidor(1))
-					} 
+							json.NewEncoder(w).Encode(mensajeFalloServidor(1))
+						}
+					}
 				}
+			} else if respuesta == 1 {
+				json.NewEncoder(w).Encode(mensajeFalloServidor(1))
 			}
-		}else if respuesta == 1{
-			json.NewEncoder(w).Encode(mensajeFalloServidor(1))
-			}	
 		}
 	}
 }
 
-func EliminarGrupoChallenge(w http.ResponseWriter, r *http.Request){
+func eliminarGrupoChallenge(w http.ResponseWriter, r *http.Request) {
 	db, err := sql.Open("mysql", configuracionMysql)
 
 	if err != nil {
 		json.NewEncoder(w).Encode(mensajeFalloServidor(1))
 	} else {
 		defer db.Close()
+
 		jsonData := []byte(`{"idGrupo":1, "idEstudiante":6}`)
 		var data map[string]interface{}
 		json.Unmarshal([]byte(jsonData), &data)
@@ -393,10 +413,4 @@ func EliminarGrupoChallenge(w http.ResponseWriter, r *http.Request){
 			}
 		}
 	}
-
-
 }
-
-
-
-
