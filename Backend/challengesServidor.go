@@ -43,10 +43,10 @@ func main() {
 	http.HandleFunc("/obtenerChallengesCategoria", obtenerChallengesCategoria)
 	http.HandleFunc("/unirseChallenge", unirseChallenge)
 	http.HandleFunc("/unirseGrupo", unirseGrupo)
-	http.HandleFunc("/obtenerGruposChallenges", obtenerGruposChallenges) // error
-	http.HandleFunc("/meEncantaChallenge", meEncantaChallenge)           // error
-	http.HandleFunc("/gruposEstudiante", gruposEstudiante)               // error
-	http.HandleFunc("/crearGrupo", crearGrupo)                           // error
+	http.HandleFunc("/obtenerGruposChallenges", obtenerGruposChallenges)
+	http.HandleFunc("/meEncantaChallenge", meEncantaChallenge)
+	http.HandleFunc("/gruposEstudiante", gruposEstudiante)
+	http.HandleFunc("/crearGrupo", crearGrupo)
 	http.HandleFunc("/eliminarGrupoChallenge", eliminarGrupoChallenge)
 	// En lugar de localhost puede ir la ip del servidor. Ademas es obligatorio desbloquear el puerto 9000
 	log.Fatal(http.ListenAndServe("localhost:"+puertoServidor, nil))
@@ -198,7 +198,7 @@ func unirseGrupo(w http.ResponseWriter, r *http.Request) {
 		defer db.Close()
 
 		// ESTOS VALORES POR EL MOMENTO SERAN DADOS, LUEGO EL CLIENTE LOS OTORGA
-		jsonData := []byte(`{"idGrupo":1, "idEstudiante":6}`)
+		jsonData := []byte(`{"idGrupo":3, "idEstudiante":5}`)
 		var data map[string]interface{}
 		// Unmarshal(fuenteDatos, seAlmacena) es para decodificar
 		json.Unmarshal([]byte(jsonData), &data)
@@ -309,7 +309,7 @@ func gruposEstudiante(w http.ResponseWriter, r *http.Request) {
 		var data map[string]interface{}
 		json.Unmarshal([]byte(jsonData), &data)
 
-		results, err := db.Query("call CrearVistaGrupoChallenge(?)", data["idEstudiante"])
+		results, err := db.Query("call gruposEstudiante(?)", data["idEstudiante"])
 
 		if err != nil {
 			json.NewEncoder(w).Encode(mensajeFalloServidor(1))
@@ -320,12 +320,11 @@ func gruposEstudiante(w http.ResponseWriter, r *http.Request) {
 				var nombreGrupo string
 				var descripcion string
 				var urlWhatsapp string
-				var fechaCreacion string
 
-				err = results.Scan(&nombreGrupo, &urlWhatsapp, &descripcion, &fechaCreacion, &groupChallengesID)
+				err = results.Scan(&nombreGrupo, &descripcion, &urlWhatsapp, &groupChallengesID)
 
 				grupo := Grupos{NombreGrupo: nombreGrupo, UrlWp: urlWhatsapp, Descripcion: descripcion,
-					FechaCreacion: fechaCreacion, GroupChallengesID: groupChallengesID}
+					GroupChallengesID: groupChallengesID}
 
 				lista = append(lista, grupo)
 				if err != nil {
@@ -344,36 +343,28 @@ func crearGrupo(w http.ResponseWriter, r *http.Request) {
 	} else {
 		defer db.Close()
 
-		jsonData := []byte(`{"nombreGrupo":"Amigos","fecha":"2006-01-02","descripcion":"Somos los mejores al usar Golang", "urlWp":"www.whatsaap/2DSAADUYUDSAD..."}`)
+		jsonData := []byte(`{"nombreGrupo":"Amigos mortales","date":"2006-01-02","Descripcion":"Somos los mejores al usar Golang", "url_wp":"www.whatsaap/2DSAADUYUDSAD..."}`)
 		var data map[string]interface{}
 		json.Unmarshal([]byte(jsonData), &data)
 
-		results, err := db.Query("call GruposExistente(?)", data["nombreGrupo"])
+		results1, err1 := db.Query("call CreatorGroup(?,?,?)", data["nombreGrupo"], data["Descripcion"], data["url_wp"])
 
 		if err != nil {
 			json.NewEncoder(w).Encode(mensajeFalloServidor(1))
 		} else {
-			var respuesta int
-			for results.Next() {
-				err = results.Scan(&respuesta)
-				break
-			}
-			if respuesta == 0 {
-				results1, err1 := db.Query("call CreatorGroup(?,?,?,?)", data["fecha"], data["nombreGrupo"],
-					data["descripcion"], data["urlWp"])
+			for results1.Next() {
+				var respond int
+				err1 = results1.Scan(&respond)
 				if err1 != nil {
 					json.NewEncoder(w).Encode(mensajeFalloServidor(1))
 				} else {
-					for results1.Next() {
-						var respond int
-						err = results1.Scan(&respond)
-						if err1 != nil {
-							json.NewEncoder(w).Encode(mensajeFalloServidor(1))
-						}
+					if respond == 1 {
+						json.NewEncoder(w).Encode(mensajeFalloServidor(2))
+					} else {
+						json.NewEncoder(w).Encode(mensajeFalloServidor(3))
 					}
 				}
-			} else if respuesta == 1 {
-				json.NewEncoder(w).Encode(mensajeFalloServidor(1))
+				break
 			}
 		}
 	}
