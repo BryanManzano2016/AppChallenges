@@ -15,14 +15,23 @@ import (
 */
 
 type Challenge struct {
-	Nombre    string `json:"nombre"`
+	Nombre    string `json:"Nombre"`
 	URL       string `json:"url"`
-	Info      string `json:"info"`
-	Categoria string `json:"categoria"`
+	Info      string `json:"Info"`
+	Categoria string `json:"Categoria"`
+
+}
+
+type Grupos struct {
+	NombreGrupo string `json:"GrupoNombre"`
+	DESCRIPCION string `json:"Descripcion"`
+	group_challenges_ID string `json:"CodeGrupo"`
+	date_creation string `json: "FechaGrupo"`
+	url_wp string `json:"url_whatsapp"`
 }
 
 // !!! user:password@tcp(127.0.0.1:3306)/database ¡¡¡
-var configuracionMysql = "root:mysql@tcp(127.0.0.1:3306)/groupchallenges"
+var configuracionMysql = "root:@tcp(127.0.0.1:3306)/groupchallenges"
 var puertoServidor = "9000"
 
 func main() {
@@ -33,6 +42,10 @@ func main() {
 	http.HandleFunc("/obtenerChallengesCategoria", obtenerChallengesCategoria)
 	http.HandleFunc("/unirseChallenge", unirseChallenge)
 	http.HandleFunc("/unirseGrupo", unirseGrupo)
+	http.HandleFunc("/obtenerGruposChallenges",obtenerGruposChallenges)	
+	http.HandleFunc("/MeEncantaChallenge", MeEncantaChallenge)
+	http.HandleFunc("/GruposEstudiante",GruposEstudiante)
+	http.HandleFunc("/crearGrupo",crearGrupo)
 	// En lugar de localhost puede ir la ip del servidor. Ademas es obligatorio desbloquear el puerto 9000
 	log.Fatal(http.ListenAndServe("localhost:"+puertoServidor, nil))
 }
@@ -208,3 +221,144 @@ func unirseGrupo(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 }
+
+func obtenerGruposChallenges(w http.ResponseWriter, r *http.Request){
+	
+	db, err := sql.Open("mysql", configuracionMysql)
+
+	if err != nil {
+		json.NewEncoder(w).Encode(mensajeFalloServidor(1))
+	} else {
+		defer db.Close()
+		jsonData := []byte(`{"idChallenge":2}`)
+		var data map[string]interface{}
+		json.Unmarshal([]byte(jsonData), &data)
+		results, err := db.Query("call gruposxChallenge(?)",data["idChallenge"])
+
+		if err != nil {
+			json.NewEncoder(w).Encode(mensajeFalloServidor(1))
+
+		} else {
+			var lista = make([]Grupos, 0)
+			for results.Next() {
+				var groupnombre string
+				var url_wp string
+				var description string
+				err = results.Scan(&groupnombre, &url_wp, &description )
+				grupos := Grupos{NombreGrupo: groupnombre, url_wp: url_wp, DESCRIPCION: description}
+				lista = append(lista, grupos)
+
+				if err != nil {
+					json.NewEncoder(w).Encode(mensajeFalloServidor(1))
+				}
+			}
+			json.NewEncoder(w).Encode(lista)
+		}
+	}
+}
+
+func MeEncantaChallenge(w http.ResponseWriter, r *http.Request){
+	db, err := sql.Open("mysql", configuracionMysql)
+	if err != nil {
+		json.NewEncoder(w).Encode(mensajeFalloServidor(1))
+	} else {
+		defer db.Close()
+		jsonData:=[]byte(`{"idChallenge":3}`)
+		var data map[string]interface{}
+		json.Unmarshal([]byte(jsonData), &data)
+		results, err := db.Query("call MasEncanta(?)",data["idChallenge"])
+		if err != nil {
+			json.NewEncoder(w).Encode(mensajeFalloServidor(1))
+		} else {
+			for results.Next() {
+				var respuesta int
+				err = results.Scan(&respuesta)
+				if err != nil {
+					json.NewEncoder(w).Encode(mensajeFalloServidor(1))
+				} else {
+					if respuesta == 1 {
+						json.NewEncoder(w).Encode(mensajeFalloServidor(2))
+					} else {
+						json.NewEncoder(w).Encode(mensajeFalloServidor(3))
+					}
+				}
+				break
+			}
+		}
+	}
+	
+}
+
+func GruposEstudiante(w http.ResponseWriter, r *http.Request){
+	db, err := sql.Open("mysql", configuracionMysql)
+	if err != nil {
+		json.NewEncoder(w).Encode(mensajeFalloServidor(1))
+	} else {
+		defer db.Close()
+		jsonData:=[]byte(`{"idEstudiante":1}`)
+		var data map[string]interface{}
+		json.Unmarshal([]byte(jsonData), &data)
+		results, err := db.Query("call CrearVistaGrupoChallenge(?)",data["idEstudiante"])
+		if err != nil {
+			json.NewEncoder(w).Encode(mensajeFalloServidor(1))
+		} else {
+			var lista = make([]Grupos, 0)
+			for results.Next() {
+				var group_challenges_ID string 
+				var groupname string
+				var description string
+				var url_whatsapp string
+				var date_creation string
+				err = results.Scan(&groupname, &url_whatsapp, &description, &date_creation, &group_challenges_ID)
+				grupos := Grupos{NombreGrupo: groupname, url_wp: url_whatsapp, DESCRIPCION: description, date_creation: date_creation, group_challenges_ID: group_challenges_ID}
+				lista = append(lista,grupos)
+				if err != nil {
+					json.NewEncoder(w).Encode(mensajeFalloServidor(1))
+					} 
+				}
+				json.NewEncoder(w).Encode(lista)
+			}
+		}	
+}
+
+func crearGrupo(w http.ResponseWriter, r *http.Request){
+	db, err := sql.Open("mysql", configuracionMysql)
+	if err != nil {
+		json.NewEncoder(w).Encode(mensajeFalloServidor(1))
+	} else {
+		defer db.Close()
+		jsonData:=[]byte(`{"nombreGrupo":"Amigos","date":"2006-01-02","Descripcion":"Somos los mejores al usar Golang", "url_wp":"www.whatsaap/2DSAADUYUDSAD..."}`)
+		var data map[string]interface{}
+		json.Unmarshal([]byte(jsonData), &data)
+		results, err := db.Query("call GruposExistente(?)",data["nombreGrupo"])
+		if err != nil {
+			json.NewEncoder(w).Encode(mensajeFalloServidor(1))
+		} else{
+			var respuesta int
+			for results.Next() {
+				err = results.Scan(&respuesta)
+				break;
+			}
+			if respuesta ==0 {
+				results1, err1 := db.Query("call CreatorGroup(?,?,?,?)",data["date"],data["nombreGrupo"],data["Descripcion"],data["url_wp"])
+				if err1 != nil {
+					json.NewEncoder(w).Encode(mensajeFalloServidor(1))
+				} else {
+					for results1.Next() {
+						var respond int
+						err = results1.Scan(&respond)
+						if err1 != nil {
+						json.NewEncoder(w).Encode(mensajeFalloServidor(1))
+					} 
+				}
+			}
+		}else if respuesta == 1{
+			json.NewEncoder(w).Encode(mensajeFalloServidor(1))
+			}	
+		}
+	}
+}
+
+
+
+
