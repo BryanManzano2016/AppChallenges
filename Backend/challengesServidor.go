@@ -46,6 +46,7 @@ func main() {
 	http.HandleFunc("/MeEncantaChallenge", MeEncantaChallenge)
 	http.HandleFunc("/GruposEstudiante",GruposEstudiante)
 	http.HandleFunc("/crearGrupo",crearGrupo)
+	http.HandleFunc("/EliminarGrupoChallenge",EliminarGrupoChallenge)
 	// En lugar de localhost puede ir la ip del servidor. Ademas es obligatorio desbloquear el puerto 9000
 	log.Fatal(http.ListenAndServe("localhost:"+puertoServidor, nil))
 }
@@ -193,7 +194,7 @@ func unirseGrupo(w http.ResponseWriter, r *http.Request) {
 		defer db.Close()
 
 		// ESTOS VALORES POR EL MOMENTO SERAN DADOS, LUEGO EL CLIENTE LOS OTORGA
-		jsonData := []byte(`{"idGrupo":9, "idEstudiante":4}`)
+		jsonData := []byte(`{"idGrupo":1, "idEstudiante":6}`)
 		var data map[string]interface{}
 		// Unmarshal(fuenteDatos, seAlmacena) es para decodificar
 		json.Unmarshal([]byte(jsonData), &data)
@@ -357,6 +358,43 @@ func crearGrupo(w http.ResponseWriter, r *http.Request){
 			}	
 		}
 	}
+}
+
+func EliminarGrupoChallenge(w http.ResponseWriter, r *http.Request){
+	db, err := sql.Open("mysql", configuracionMysql)
+
+	if err != nil {
+		json.NewEncoder(w).Encode(mensajeFalloServidor(1))
+	} else {
+		defer db.Close()
+		jsonData := []byte(`{"idGrupo":1, "idEstudiante":6}`)
+		var data map[string]interface{}
+		json.Unmarshal([]byte(jsonData), &data)
+
+		resultados, err := db.Query("call EliminarGroup_student(?, ?)", data["idGrupo"],
+			data["idEstudiante"])
+
+		if err != nil {
+			json.NewEncoder(w).Encode(mensajeFalloServidor(1))
+		} else {
+			for resultados.Next() {
+				var respuesta int
+				err = resultados.Scan(&respuesta)
+				if err != nil {
+					json.NewEncoder(w).Encode(mensajeFalloServidor(1))
+				} else {
+					if respuesta == 1 {
+						json.NewEncoder(w).Encode(mensajeFalloServidor(2))
+					} else {
+						json.NewEncoder(w).Encode(mensajeFalloServidor(3))
+					}
+				}
+				break
+			}
+		}
+	}
+
+
 }
 
 
