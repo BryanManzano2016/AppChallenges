@@ -1,5 +1,6 @@
 # AppChallenges
-Cliente y servidor para la aplicacion AppChallenges
+Cliente y servidor para la aplicacion AppChallenges. Teniendo al lenguaje Golang como backend y ... como frontEnd
+
 
 # Consideraciones para backend
 
