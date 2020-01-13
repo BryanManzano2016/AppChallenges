@@ -48,6 +48,9 @@ func main() {
 	http.HandleFunc("/gruposEstudiante", gruposEstudiante)
 	http.HandleFunc("/crearGrupo", crearGrupo)
 	http.HandleFunc("/eliminarGrupoChallenge", eliminarGrupoChallenge)
+	http.HandleFunc("/menosEncantaChallenge", menosEncantaChallenge)
+	http.HandleFunc("/crearChallenge", crearChallenge)
+
 	// En lugar de localhost puede ir la ip del servidor. Ademas es obligatorio desbloquear el puerto 9000
 	log.Fatal(http.ListenAndServe("localhost:"+puertoServidor, nil))
 }
@@ -395,6 +398,76 @@ func eliminarGrupoChallenge(w http.ResponseWriter, r *http.Request) {
 					json.NewEncoder(w).Encode(mensajeFalloServidor(1))
 				} else {
 					if respuesta == 1 {
+						json.NewEncoder(w).Encode(mensajeFalloServidor(2))
+					} else {
+						json.NewEncoder(w).Encode(mensajeFalloServidor(3))
+					}
+				}
+				break
+			}
+		}
+	}
+}
+
+func menosEncantaChallenge(w http.ResponseWriter, r *http.Request) {
+	db, err := sql.Open("mysql", configuracionMysql)
+	if err != nil {
+		json.NewEncoder(w).Encode(mensajeFalloServidor(1))
+	} else {
+		defer db.Close()
+
+		jsonData := []byte(`{"idChallenge":3}`)
+		var data map[string]interface{}
+		json.Unmarshal([]byte(jsonData), &data)
+
+		results, err := db.Query("call MenosEncanta(?)", data["idChallenge"])
+
+		if err != nil {
+			json.NewEncoder(w).Encode(mensajeFalloServidor(1))
+		} else {
+			for results.Next() {
+				var respuesta int
+				err = results.Scan(&respuesta)
+				if err != nil {
+					json.NewEncoder(w).Encode(mensajeFalloServidor(1))
+				} else {
+					if respuesta == 1 {
+						json.NewEncoder(w).Encode(mensajeFalloServidor(2))
+					} else {
+						json.NewEncoder(w).Encode(mensajeFalloServidor(3))
+					}
+				}
+				break
+			}
+		}
+	}
+}
+
+func crearChallenge(w http.ResponseWriter, r *http.Request) {
+	db, err := sql.Open("mysql", configuracionMysql)
+	if err != nil {
+		json.NewEncoder(w).Encode(mensajeFalloServidor(1))
+	} else {
+		defer db.Close()
+
+		jsonData := []byte(`{"nombreChallenge":"Space Apps Challenge","Categoria":"Ciencia","info":"https://2019.spaceappschallenge.org/lead","url_img":"https://www.esa.int/var/esa/storage/images/esa_multimedia
+ /images/2014/03/space_apps_challenge_logo/14334849-1-eng-GB/Space_Apps_Challenge_Logo_pillars.jpg"}`)
+		var data map[string]interface{}
+		json.Unmarshal([]byte(jsonData), &data)
+
+		results1, err1 := db.Query("call CreatorChallange(?,?,?,?)", data["nombreChallenge"], data["Categoria"],
+			data["info"], data["url_img"])
+
+		if err != nil {
+			json.NewEncoder(w).Encode(mensajeFalloServidor(1))
+		} else {
+			for results1.Next() {
+				var respond int
+				err1 = results1.Scan(&respond)
+				if err1 != nil {
+					json.NewEncoder(w).Encode(mensajeFalloServidor(1))
+				} else {
+					if respond == 1 {
 						json.NewEncoder(w).Encode(mensajeFalloServidor(2))
 					} else {
 						json.NewEncoder(w).Encode(mensajeFalloServidor(3))

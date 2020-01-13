@@ -130,6 +130,30 @@ begin
     end if;
 end;
 %% Delimiter ;
+
+-- disminuir me encanta
+Delimiter %%
+create procedure MenosEncanta(in code_challenges int)
+begin	
+	update Challenge set Challenge.Tfavorite=Challenge.Tfavorite-1 
+		where Challenge.code_challenges=code_challenges  AND code_challenges <> 0;    
+	select 1;
+end;
+%% Delimiter ;
+
+-- crear challenges
+ Delimiter %%
+create procedure CreatorChallange(in name VARCHAR(60), in category varchar(30),in info  VARCHAR(160),in url_img VARCHAR(250))
+begin
+		if not exists ( select 1 from Challenge gc where gc.name = name) then     
+			insert into Challenge( name, category, info, url_img,Tfavorite) 
+				values (name, category, info, url_img,0);			
+			select 1;			
+		else
+			select 0;
+		end if;	        
+end;
+%% Delimiter ;
 /* ------------------------------------------------------------------ */
 
 
