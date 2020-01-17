@@ -10,6 +10,7 @@ import java.util.*
 
 class Inicio : AppCompatActivity(), CoroutineScope by MainScope() {
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
@@ -64,7 +65,8 @@ class Inicio : AppCompatActivity(), CoroutineScope by MainScope() {
     private suspend fun obtenerChallenges(): JSONArray {
         return withContext(Dispatchers.Default) {
             val solicitud = Auxiliar().solicitudHttpGet(
-                    "http://192.168.100.133:9000/obtenerChallenges"
+                    Auxiliar().obtener_Ip()+"obtenerChallenges"
+
             )
             val respuesta = Auxiliar().respuestaString( solicitud.body() )
             return@withContext JSONArray( respuesta )
@@ -92,7 +94,7 @@ class Inicio : AppCompatActivity(), CoroutineScope by MainScope() {
     private suspend fun obtenerChallengesCategoria(): JSONArray {
         return withContext(Dispatchers.Default) {
             val solicitud = Auxiliar().solicitudHttpPost(
-                    "http://192.168.100.133:9000/obtenerChallengesCategoria",
+                    Auxiliar().obtener_Ip()+"obtenerChallengesCategoria",
                     "{\"categoria\":\"Ciencia\"}" )
             return@withContext JSONArray( Auxiliar().respuestaString( solicitud.body() ) )
         }
@@ -112,7 +114,7 @@ class Inicio : AppCompatActivity(), CoroutineScope by MainScope() {
     private suspend fun meEncanta(): JSONArray {
         return withContext(Dispatchers.Default) {
             val solicitud = Auxiliar().solicitudHttpPost(
-                    "http://192.168.100.133:9000/meEncantaChallenge",
+                    Auxiliar().obtener_Ip()+"meEncantaChallenge",
                     "{\"idChallenge\":3}" )
             return@withContext JSONArray( Auxiliar().respuestaString( solicitud.body() ) )
         }

@@ -7,6 +7,12 @@ import kotlin.contracts.Returns
 
 class Auxiliar {
 
+    val direccion_ip= "http://192.168.100.81:9000/"
+
+    fun obtener_Ip(): String {
+        return direccion_ip.toString()
+    }
+
     // Genera una solicitud http en formato get dado una url
     fun solicitudHttpGet(url: String): Response{
         // Ejemplo de url -> "http://192.168.100.133:9000/obtenerChallenges"
@@ -49,4 +55,6 @@ class Auxiliar {
                 objeto.get("info").toString(), objeto.get("categoria").toString()
         )
     }
+
+
 }
