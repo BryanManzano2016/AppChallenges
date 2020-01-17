@@ -3,10 +3,9 @@ package main
 import (
 	"database/sql"
 	"encoding/json"
-	"fmt"
+	"io/ioutil"
 	"log"
 	"net/http"
-	"time"
 
 	_ "github.com/go-sql-driver/mysql" // DEBEN INSTALAR EL DRIVER MEDIANTE: go get -u github.com/go-sql-driver/mysql
 )
@@ -17,22 +16,26 @@ import (
 */
 
 type Challenge struct {
-	Nombre    string `json:"Nombre"`
+	Nombre    string `json:"nombre"`
 	URL       string `json:"url"`
-	Info      string `json:"Info"`
-	Categoria string `json:"Categoria"`
+	Info      string `json:"info"`
+	Categoria string `json:"categoria"`
 }
 
 type Grupos struct {
-	NombreGrupo       string `json:"GrupoNombre"`
-	Descripcion       string `json:"Descripcion"`
-	GroupChallengesID string `json:"CodeGrupo"`
-	FechaCreacion     string `json: "FechaGrupo"`
+	NombreGrupo       string `json:"grupoNombre"`
+	Descripcion       string `json:"descripcion"`
+	GroupChallengesID string `json:"codeGrupo"`
+	FechaCreacion     string `json: "fechaGrupo"`
 	UrlWp             string `json:"url_whatsapp"`
 }
 
+type Respuesta struct {
+	Resp int `json:"respuesta"`
+}
+
 // !!! user:password@tcp(127.0.0.1:3306)/database ¡¡¡
-var configuracionMysql = "root:mysql@tcp(127.0.0.1:3306)/groupchallenges"
+var configuracionMysql = "root:root@tcp(127.0.0.1:3306)/groupchallenges"
 var puertoServidor = "9000"
 
 func main() {
@@ -52,58 +55,51 @@ func main() {
 	http.HandleFunc("/crearChallenge", crearChallenge)
 
 	// En lugar de localhost puede ir la ip del servidor. Ademas es obligatorio desbloquear el puerto 9000
-	log.Fatal(http.ListenAndServe("localhost:"+puertoServidor, nil))
+	log.Fatal(http.ListenAndServe("192.168.100.133:"+puertoServidor, nil))
 }
 
-// 1 -> servidor caido 			2 -> operacion exitosa 			3 -> operacion fallida
-func mensajeFalloServidor(mensaje int) map[string]int {
-	var respuesta map[string]int
-	if mensaje == 1 {
-		fmt.Println("***Error***")
-		fmt.Println(time.Now())
-		fmt.Println("***********")
-		respuesta = map[string]int{"respuesta": 0}
-	} else if mensaje == 2 {
-		respuesta = map[string]int{"respuesta": 1}
-	} else if mensaje == 3 {
-		respuesta = map[string]int{"respuesta": 2}
-	}
-	return respuesta
+// 0 -> servidor caido 			1 -> operacion exitosa 			2 -> operacion fallida
+func respuestaArreglo(mensaje int) []Respuesta {
+	var lista = make([]Respuesta, 0)
+	lista = append(lista, Respuesta{Resp: mensaje})
+	return lista
 }
 
-// Servicios hechos por Bryan
 func obtenerChallenges(w http.ResponseWriter, r *http.Request) {
 
 	db, err := sql.Open("mysql", configuracionMysql)
 
 	if err != nil {
-		json.NewEncoder(w).Encode(mensajeFalloServidor(1))
+		json.NewEncoder(w).Encode(respuestaArreglo(0))
 	} else {
 		defer db.Close()
 		// Usar stored procedure sin paramentros
-		results, err := db.Query("call verChallenges()")
+		resultados, err := db.Query("call verChallenges()")
 
 		if err != nil {
 			// Como es error backend enviara 1 como respuesta
-			json.NewEncoder(w).Encode(mensajeFalloServidor(1))
+			json.NewEncoder(w).Encode(respuestaArreglo(0))
 		} else {
 
 			// Arreglo con 0 elementos
 			var lista = make([]Challenge, 0)
 			// Recorre el resultado de consulta
-			for results.Next() {
+			for resultados.Next() {
 
 				var nombre string
 				var url string
+				var info string
+				var categoria string
 				// Guardar los campos en las variables
-				err = results.Scan(&nombre, &url)
+				err = resultados.Scan(&nombre, &url, &info, &categoria)
 				// Crear el struct y luego añadir al array
-				challenge := Challenge{Nombre: nombre, URL: url}
+				challenge := Challenge{Nombre: nombre, URL: url, Info: info,
+					Categoria: categoria}
 				lista = append(lista, challenge)
 
 				if err != nil {
 					// Igualmente, como es error backend enviara 1 como respuesta
-					json.NewEncoder(w).Encode(mensajeFalloServidor(1))
+					json.NewEncoder(w).Encode(respuestaArreglo(0))
 				}
 			}
 			// Codifica y responde al cliente de una vez
@@ -114,40 +110,50 @@ func obtenerChallenges(w http.ResponseWriter, r *http.Request) {
 
 // Dada una categoria se recuperan los challenges
 func obtenerChallengesCategoria(w http.ResponseWriter, r *http.Request) {
+
+	jsonRecibido, err2 := ioutil.ReadAll(r.Body)
+	defer r.Body.Close()
 	db, err := sql.Open("mysql", configuracionMysql)
 
-	if err != nil {
-		json.NewEncoder(w).Encode(mensajeFalloServidor(1))
+	if err != nil || err2 != nil {
+		json.NewEncoder(w).Encode(respuestaArreglo(0))
 	} else {
 		defer db.Close()
 
 		// ESTOS VALORES POR EL MOMENTO SERAN DADOS, LUEGO EL CLIENTE LOS OTORGA
-		jsonData := []byte(`{"id":"Ciencia", "dia":"martes"}`)
+		jsonData := []byte(jsonRecibido)
 		var data map[string]interface{}
 		// Unmarshal(fuenteDatos, seAlmacena) es para decodificar
 		json.Unmarshal(jsonData, &data)
 
-		resultados, err := db.Query("call challengesCategoria(?)", data["id"].(string))
+		resultados, err := db.Query("call challengesCategoria(?)", data["categoria"].(string))
 
 		if err != nil {
-			json.NewEncoder(w).Encode(mensajeFalloServidor(1))
+			// Como es error backend enviara 1 como respuesta
+			json.NewEncoder(w).Encode(respuestaArreglo(0))
 		} else {
 
+			// Arreglo con 0 elementos
 			var lista = make([]Challenge, 0)
+			// Recorre el resultado de consulta
 			for resultados.Next() {
 
 				var nombre string
 				var url string
-				err = resultados.Scan(&nombre, &url)
+				var info string
+				var categoria string
+				// Guardar los campos en las variables
+				err = resultados.Scan(&nombre, &url, &info, &categoria)
+				// Crear el struct y luego añadir al array
+				challenge := Challenge{Nombre: nombre, URL: url, Info: info,
+					Categoria: categoria}
 
-				challenge := Challenge{Nombre: nombre, URL: url}
 				lista = append(lista, challenge)
 
 				if err != nil {
-					json.NewEncoder(w).Encode(mensajeFalloServidor(1))
+					json.NewEncoder(w).Encode(respuestaArreglo(0))
 				}
 			}
-			// De fondo Encode usa Marshall para crear el json
 			json.NewEncoder(w).Encode(lista)
 		}
 	}
@@ -155,34 +161,33 @@ func obtenerChallengesCategoria(w http.ResponseWriter, r *http.Request) {
 
 // Cuando cliente da click en unirse a challenge
 func unirseChallenge(w http.ResponseWriter, r *http.Request) {
+
+	jsonRecibido, err2 := ioutil.ReadAll(r.Body)
+	defer r.Body.Close()
 	db, err := sql.Open("mysql", configuracionMysql)
 
-	if err != nil {
-		json.NewEncoder(w).Encode(mensajeFalloServidor(1))
+	if err != nil || err2 != nil {
+		json.NewEncoder(w).Encode(respuestaArreglo(0))
 	} else {
 
 		defer db.Close()
 		// ESTOS VALORES POR EL MOMENTO SERAN DADOS, LUEGO EL CLIENTE LOS OTORGA
-		jsonData := []byte(`{"idChallenge":9, "idEstudiante":4}`)
+		jsonData := []byte(jsonRecibido)
 		var data map[string]interface{}
 		json.Unmarshal([]byte(jsonData), &data)
 
 		resultados, err := db.Query("call CreatorConfirmation(?, ?)", data["idChallenge"], data["idEstudiante"])
 
 		if err != nil {
-			json.NewEncoder(w).Encode(mensajeFalloServidor(1))
+			json.NewEncoder(w).Encode(respuestaArreglo(0))
 		} else {
 			for resultados.Next() {
 				var respuesta int
 				err = resultados.Scan(&respuesta)
 				if err != nil {
-					json.NewEncoder(w).Encode(mensajeFalloServidor(1))
+					json.NewEncoder(w).Encode(respuestaArreglo(0))
 				} else {
-					if respuesta == 1 {
-						json.NewEncoder(w).Encode(mensajeFalloServidor(2))
-					} else {
-						json.NewEncoder(w).Encode(mensajeFalloServidor(3))
-					}
+					json.NewEncoder(w).Encode(respuestaArreglo(respuesta))
 				}
 				break // Solo necesita la 1ra fila del resultSet porque es un nro confirmando operacion
 			}
@@ -193,15 +198,17 @@ func unirseChallenge(w http.ResponseWriter, r *http.Request) {
 // Cuando cliente da click a unirse a grupo
 func unirseGrupo(w http.ResponseWriter, r *http.Request) {
 
+	jsonRecibido, err2 := ioutil.ReadAll(r.Body)
+	defer r.Body.Close()
 	db, err := sql.Open("mysql", configuracionMysql)
 
-	if err != nil {
-		json.NewEncoder(w).Encode(mensajeFalloServidor(1))
+	if err != nil || err2 != nil {
+		json.NewEncoder(w).Encode(respuestaArreglo(0))
 	} else {
 		defer db.Close()
 
 		// ESTOS VALORES POR EL MOMENTO SERAN DADOS, LUEGO EL CLIENTE LOS OTORGA
-		jsonData := []byte(`{"idGrupo":3, "idEstudiante":5}`)
+		jsonData := []byte(jsonRecibido)
 		var data map[string]interface{}
 		// Unmarshal(fuenteDatos, seAlmacena) es para decodificar
 		json.Unmarshal([]byte(jsonData), &data)
@@ -210,43 +217,41 @@ func unirseGrupo(w http.ResponseWriter, r *http.Request) {
 			data["idEstudiante"])
 
 		if err != nil {
-			json.NewEncoder(w).Encode(mensajeFalloServidor(1))
+			json.NewEncoder(w).Encode(respuestaArreglo(0))
 		} else {
 			for resultados.Next() {
 				var respuesta int
 				err = resultados.Scan(&respuesta)
+
 				if err != nil {
-					json.NewEncoder(w).Encode(mensajeFalloServidor(1))
+					json.NewEncoder(w).Encode(respuestaArreglo(0))
 				} else {
-					if respuesta == 1 {
-						json.NewEncoder(w).Encode(mensajeFalloServidor(2))
-					} else {
-						json.NewEncoder(w).Encode(mensajeFalloServidor(3))
-					}
+					json.NewEncoder(w).Encode(respuestaArreglo(respuesta))
 				}
-				break
+				break // Solo necesita la 1ra fila del resultSet porque es un nro confirmando operacion
 			}
 		}
+
 	}
 }
 
-// Servicios hechos por Francisco
 func obtenerGruposChallenges(w http.ResponseWriter, r *http.Request) {
 
+	jsonRecibido, err2 := ioutil.ReadAll(r.Body)
+	defer r.Body.Close()
 	db, err := sql.Open("mysql", configuracionMysql)
 
-	if err != nil {
-		json.NewEncoder(w).Encode(mensajeFalloServidor(1))
+	if err != nil || err2 != nil {
+		json.NewEncoder(w).Encode(respuestaArreglo(0))
 	} else {
 		defer db.Close()
-		jsonData := []byte(`{"idChallenge":2}`)
+		jsonData := []byte(jsonRecibido)
 		var data map[string]interface{}
 		json.Unmarshal([]byte(jsonData), &data)
 		results, err := db.Query("call gruposxChallenge(?)", data["idChallenge"])
 
 		if err != nil {
-			json.NewEncoder(w).Encode(mensajeFalloServidor(1))
-
+			json.NewEncoder(w).Encode(respuestaArreglo(0))
 		} else {
 			var lista = make([]Grupos, 0)
 			for results.Next() {
@@ -259,7 +264,7 @@ func obtenerGruposChallenges(w http.ResponseWriter, r *http.Request) {
 				lista = append(lista, grupos)
 
 				if err != nil {
-					json.NewEncoder(w).Encode(mensajeFalloServidor(1))
+					json.NewEncoder(w).Encode(respuestaArreglo(0))
 				}
 			}
 			json.NewEncoder(w).Encode(lista)
@@ -268,54 +273,59 @@ func obtenerGruposChallenges(w http.ResponseWriter, r *http.Request) {
 }
 
 func meEncantaChallenge(w http.ResponseWriter, r *http.Request) {
+
+	jsonRecibido, err2 := ioutil.ReadAll(r.Body)
+	defer r.Body.Close()
 	db, err := sql.Open("mysql", configuracionMysql)
-	if err != nil {
-		json.NewEncoder(w).Encode(mensajeFalloServidor(1))
+
+	if err != nil || err2 != nil {
+		json.NewEncoder(w).Encode(respuestaArreglo(0))
 	} else {
 		defer db.Close()
 
-		jsonData := []byte(`{"idChallenge":3}`)
+		jsonData := []byte(jsonRecibido)
 		var data map[string]interface{}
 		json.Unmarshal([]byte(jsonData), &data)
 
-		results, err := db.Query("call MasEncanta(?)", data["idChallenge"])
+		resultados, err := db.Query("call MasEncanta(?)", data["idChallenge"])
 
 		if err != nil {
-			json.NewEncoder(w).Encode(mensajeFalloServidor(1))
+			json.NewEncoder(w).Encode(respuestaArreglo(0))
 		} else {
-			for results.Next() {
+			for resultados.Next() {
 				var respuesta int
-				err = results.Scan(&respuesta)
+				err = resultados.Scan(&respuesta)
+
 				if err != nil {
-					json.NewEncoder(w).Encode(mensajeFalloServidor(1))
+					json.NewEncoder(w).Encode(respuestaArreglo(0))
 				} else {
-					if respuesta == 1 {
-						json.NewEncoder(w).Encode(mensajeFalloServidor(2))
-					} else {
-						json.NewEncoder(w).Encode(mensajeFalloServidor(3))
-					}
+					json.NewEncoder(w).Encode(respuestaArreglo(respuesta))
 				}
-				break
+				break // Solo necesita la 1ra fila del resultSet porque es un nro confirmando operacion
 			}
 		}
 	}
 }
 
 func gruposEstudiante(w http.ResponseWriter, r *http.Request) {
+
+	jsonRecibido, err2 := ioutil.ReadAll(r.Body)
+	defer r.Body.Close()
 	db, err := sql.Open("mysql", configuracionMysql)
-	if err != nil {
-		json.NewEncoder(w).Encode(mensajeFalloServidor(1))
+
+	if err != nil || err2 != nil {
+		json.NewEncoder(w).Encode(respuestaArreglo(0))
 	} else {
 		defer db.Close()
 
-		jsonData := []byte(`{"idEstudiante":1}`)
+		jsonData := []byte(jsonRecibido)
 		var data map[string]interface{}
 		json.Unmarshal([]byte(jsonData), &data)
 
 		results, err := db.Query("call gruposEstudiante(?)", data["idEstudiante"])
 
 		if err != nil {
-			json.NewEncoder(w).Encode(mensajeFalloServidor(1))
+			json.NewEncoder(w).Encode(respuestaArreglo(0))
 		} else {
 			var lista = make([]Grupos, 0)
 			for results.Next() {
@@ -331,7 +341,7 @@ func gruposEstudiante(w http.ResponseWriter, r *http.Request) {
 
 				lista = append(lista, grupo)
 				if err != nil {
-					json.NewEncoder(w).Encode(mensajeFalloServidor(1))
+					json.NewEncoder(w).Encode(respuestaArreglo(0))
 				}
 			}
 			json.NewEncoder(w).Encode(lista)
@@ -340,32 +350,32 @@ func gruposEstudiante(w http.ResponseWriter, r *http.Request) {
 }
 
 func crearGrupo(w http.ResponseWriter, r *http.Request) {
+
+	jsonRecibido, err2 := ioutil.ReadAll(r.Body)
+	defer r.Body.Close()
 	db, err := sql.Open("mysql", configuracionMysql)
-	if err != nil {
-		json.NewEncoder(w).Encode(mensajeFalloServidor(1))
+
+	if err != nil || err2 != nil {
+		json.NewEncoder(w).Encode(respuestaArreglo(0))
 	} else {
 		defer db.Close()
 
-		jsonData := []byte(`{"nombreGrupo":"Amigos mortales","date":"2006-01-02","Descripcion":"Somos los mejores al usar Golang", "url_wp":"www.whatsaap/2DSAADUYUDSAD..."}`)
+		jsonData := []byte(jsonRecibido)
 		var data map[string]interface{}
 		json.Unmarshal([]byte(jsonData), &data)
 
 		results1, err1 := db.Query("call CreatorGroup(?,?,?)", data["nombreGrupo"], data["Descripcion"], data["url_wp"])
 
 		if err != nil {
-			json.NewEncoder(w).Encode(mensajeFalloServidor(1))
+			json.NewEncoder(w).Encode(respuestaArreglo(0))
 		} else {
 			for results1.Next() {
-				var respond int
-				err1 = results1.Scan(&respond)
+				var respuesta int
+				err1 = results1.Scan(&respuesta)
 				if err1 != nil {
-					json.NewEncoder(w).Encode(mensajeFalloServidor(1))
+					json.NewEncoder(w).Encode(respuestaArreglo(0))
 				} else {
-					if respond == 1 {
-						json.NewEncoder(w).Encode(mensajeFalloServidor(2))
-					} else {
-						json.NewEncoder(w).Encode(mensajeFalloServidor(3))
-					}
+					json.NewEncoder(w).Encode(respuestaArreglo(respuesta))
 				}
 				break
 			}
@@ -374,14 +384,17 @@ func crearGrupo(w http.ResponseWriter, r *http.Request) {
 }
 
 func eliminarGrupoChallenge(w http.ResponseWriter, r *http.Request) {
+
+	jsonRecibido, err2 := ioutil.ReadAll(r.Body)
+	defer r.Body.Close()
 	db, err := sql.Open("mysql", configuracionMysql)
 
-	if err != nil {
-		json.NewEncoder(w).Encode(mensajeFalloServidor(1))
+	if err != nil || err2 != nil {
+		json.NewEncoder(w).Encode(respuestaArreglo(0))
 	} else {
 		defer db.Close()
 
-		jsonData := []byte(`{"idGrupo":1, "idEstudiante":6}`)
+		jsonData := []byte(jsonRecibido)
 		var data map[string]interface{}
 		json.Unmarshal([]byte(jsonData), &data)
 
@@ -389,19 +402,15 @@ func eliminarGrupoChallenge(w http.ResponseWriter, r *http.Request) {
 			data["idEstudiante"])
 
 		if err != nil {
-			json.NewEncoder(w).Encode(mensajeFalloServidor(1))
+			json.NewEncoder(w).Encode(respuestaArreglo(0))
 		} else {
 			for resultados.Next() {
 				var respuesta int
 				err = resultados.Scan(&respuesta)
 				if err != nil {
-					json.NewEncoder(w).Encode(mensajeFalloServidor(1))
+					json.NewEncoder(w).Encode(respuestaArreglo(0))
 				} else {
-					if respuesta == 1 {
-						json.NewEncoder(w).Encode(mensajeFalloServidor(2))
-					} else {
-						json.NewEncoder(w).Encode(mensajeFalloServidor(3))
-					}
+					json.NewEncoder(w).Encode(respuestaArreglo(respuesta))
 				}
 				break
 			}
@@ -410,32 +419,32 @@ func eliminarGrupoChallenge(w http.ResponseWriter, r *http.Request) {
 }
 
 func menosEncantaChallenge(w http.ResponseWriter, r *http.Request) {
+
+	jsonRecibido, err2 := ioutil.ReadAll(r.Body)
+	defer r.Body.Close()
 	db, err := sql.Open("mysql", configuracionMysql)
-	if err != nil {
-		json.NewEncoder(w).Encode(mensajeFalloServidor(1))
+
+	if err != nil || err2 != nil {
+		json.NewEncoder(w).Encode(respuestaArreglo(0))
 	} else {
 		defer db.Close()
 
-		jsonData := []byte(`{"idChallenge":3}`)
+		jsonData := []byte(jsonRecibido)
 		var data map[string]interface{}
 		json.Unmarshal([]byte(jsonData), &data)
 
 		results, err := db.Query("call MenosEncanta(?)", data["idChallenge"])
 
 		if err != nil {
-			json.NewEncoder(w).Encode(mensajeFalloServidor(1))
+			json.NewEncoder(w).Encode(respuestaArreglo(0))
 		} else {
 			for results.Next() {
 				var respuesta int
 				err = results.Scan(&respuesta)
 				if err != nil {
-					json.NewEncoder(w).Encode(mensajeFalloServidor(1))
+					json.NewEncoder(w).Encode(respuestaArreglo(0))
 				} else {
-					if respuesta == 1 {
-						json.NewEncoder(w).Encode(mensajeFalloServidor(2))
-					} else {
-						json.NewEncoder(w).Encode(mensajeFalloServidor(3))
-					}
+					json.NewEncoder(w).Encode(respuestaArreglo(respuesta))
 				}
 				break
 			}
@@ -444,14 +453,17 @@ func menosEncantaChallenge(w http.ResponseWriter, r *http.Request) {
 }
 
 func crearChallenge(w http.ResponseWriter, r *http.Request) {
+
+	jsonRecibido, err2 := ioutil.ReadAll(r.Body)
+	defer r.Body.Close()
 	db, err := sql.Open("mysql", configuracionMysql)
-	if err != nil {
-		json.NewEncoder(w).Encode(mensajeFalloServidor(1))
+
+	if err != nil || err2 != nil {
+		json.NewEncoder(w).Encode(respuestaArreglo(0))
 	} else {
 		defer db.Close()
 
-		jsonData := []byte(`{"nombreChallenge":"Space Apps Challenge","Categoria":"Ciencia","info":"https://2019.spaceappschallenge.org/lead","url_img":"https://www.esa.int/var/esa/storage/images/esa_multimedia
- /images/2014/03/space_apps_challenge_logo/14334849-1-eng-GB/Space_Apps_Challenge_Logo_pillars.jpg"}`)
+		jsonData := []byte(jsonRecibido)
 		var data map[string]interface{}
 		json.Unmarshal([]byte(jsonData), &data)
 
@@ -459,19 +471,15 @@ func crearChallenge(w http.ResponseWriter, r *http.Request) {
 			data["info"], data["url_img"])
 
 		if err != nil {
-			json.NewEncoder(w).Encode(mensajeFalloServidor(1))
+			json.NewEncoder(w).Encode(respuestaArreglo(0))
 		} else {
 			for results1.Next() {
-				var respond int
-				err1 = results1.Scan(&respond)
+				var respuesta int
+				err1 = results1.Scan(&respuesta)
 				if err1 != nil {
-					json.NewEncoder(w).Encode(mensajeFalloServidor(1))
+					json.NewEncoder(w).Encode(respuestaArreglo(0))
 				} else {
-					if respond == 1 {
-						json.NewEncoder(w).Encode(mensajeFalloServidor(2))
-					} else {
-						json.NewEncoder(w).Encode(mensajeFalloServidor(3))
-					}
+					json.NewEncoder(w).Encode(respuestaArreglo(respuesta))
 				}
 				break
 			}

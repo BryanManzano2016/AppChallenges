@@ -30,14 +30,14 @@ DROP PROCEDURE IF EXISTS verfgrupovacio;
 Delimiter //
 create procedure verChallenges()
 	begin
-		select name, url_img from challenge where status=1;
+		select name, url_img, info, category from challenge where status=1;
 	end //
 Delimiter ;
 
 Delimiter //
 create procedure challengesCategoria( in categoria varchar(50) )
 	begin
-		select name, url_img from challenge where status=1 and categoria=category;
+		select name, url_img, info, category from challenge where status=1 and categoria=category;
 	end //
 Delimiter ;
 
@@ -50,7 +50,7 @@ begin
 			insert into Confirmation(code_challenges, student_ID) values (code_challenges, student_ID); 
 			select 1;
 	else
-            select 0;
+            select 2;
     end if;		
 end;
 %% Delimiter ;
@@ -64,7 +64,7 @@ begin
 			insert into Group_student values (group_ID, student_ID); 
 			select 1;
 	else
-            select 0;
+            select 2;
     end if;
 end;
 %% Delimiter ;
@@ -89,7 +89,7 @@ create procedure MasEncanta(in code_challenges int)
 begin	
 	update Challenge set Challenge.Tfavorite=Challenge.Tfavorite+1 
 		where Challenge.code_challenges=code_challenges  AND code_challenges <> 0;    
-	select 1;
+	select 2;
 end;
 %% Delimiter ;
 
@@ -113,7 +113,7 @@ begin
 				values ( groupname, descripcion, url_whatsapp );			
 			select 1;			
 		else
-			select 0;
+			select 2;
 		end if;	        
 end;
 %% Delimiter ;
@@ -126,7 +126,7 @@ begin
 			delete from Group_student where Group_student.student_ID = student_ID and  Group_student.group_challenges_ID = group_ID; 
 			select 1;
 	else
-            select 0;
+            select 2;
     end if;
 end;
 %% Delimiter ;
@@ -150,7 +150,7 @@ begin
 				values (name, category, info, url_img,0);			
 			select 1;			
 		else
-			select 0;
+			select 2;
 		end if;	        
 end;
 %% Delimiter ;
