@@ -19,7 +19,7 @@ Es asi que si su usuario es root y contraseña es 123 deberia ser:  root:123@tcp
 
 # Consideraciones para frontEnt
 
-* Para conectar con el servidor localmente hay que editar la linea del archivo FrontEnd/Tester/app/src/main/res/xml/network_security_config.xml donde esta <domain includeSubdomains="true">192.168.100.133</domain>. Es asi que dependiendo donde este ejecutandose el servidor ese paramentro de la ip cambia.
+* Para conectar con el servidor localmente hay que editar la linea del archivo FrontEnd/Tester/app/src/main/res/xml/network_security_config.xml donde esta \<domain includeSubdomains="true">192.168.100.133\</domain>. Es asi que dependiendo donde este ejecutandose el servidor ese paramentro de la ip cambia.
 
 * Como informacion el proyecto android utiliza las librerias okhttp para cuestiones de solicitudes al servidor y corutines para los procesos en 2do plano de kotlin y android. Esto se reflejara en el archivo build.gradle. Por otra parte, hay agregados permisos en el AndroidManifest.xml para la conexion a red.
 
