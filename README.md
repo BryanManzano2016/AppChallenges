@@ -10,6 +10,8 @@ Cliente y servidor para la aplicacion AppChallenges. Teniendo al lenguaje Golang
 
 * Ejecutar en consola, esto dentro de la carpeta donde esta el archivo mediante:  ---> go run challengesServidor.go
 
+* Dependiendo la ip de la maquina donde se ejecuta el servidor deben cambiar la variable ip global, ya que el cliente movil estara en otro dispositivo y no puede conectarse al localhost.
+
 * Adaptar la variable global "configuracionMysql" al formato ---> user:password@tcp(127.0.0.1:3306)/database.
 Es asi que si su usuario es root y contraseña es 123 deberia ser:  root:123@tcp(127.0.0.1:3306)/database.
 
