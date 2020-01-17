@@ -37,6 +37,7 @@ type Respuesta struct {
 // !!! user:password@tcp(127.0.0.1:3306)/database ¡¡¡
 var configuracionMysql = "root:root@tcp(127.0.0.1:3306)/groupchallenges"
 var puertoServidor = "9000"
+var ip = "192.168.100.133"
 
 func main() {
 	// Ejecutar en consola:                    go run challengesServidor.go
@@ -55,7 +56,7 @@ func main() {
 	http.HandleFunc("/crearChallenge", crearChallenge)
 
 	// En lugar de localhost puede ir la ip del servidor. Ademas es obligatorio desbloquear el puerto 9000
-	log.Fatal(http.ListenAndServe("192.168.100.133:"+puertoServidor, nil))
+	log.Fatal(http.ListenAndServe(ip+":"+puertoServidor, nil))
 }
 
 // 0 -> servidor caido 			1 -> operacion exitosa 			2 -> operacion fallida
