@@ -43,6 +43,13 @@ class Inicio : AppCompatActivity(), CoroutineScope by MainScope() {
                 meEncantaCt()
             }
         }
+        botonObteneventanainfogrupo.setOnClickListener {
+            // lanzar corutina
+            launch {
+
+                setContentView(R.layout.activity_pall_infogrupo)
+            }
+        }
     }
     // OBTENER CHALLENGES
     private suspend fun obtenerChallengesCt() {
