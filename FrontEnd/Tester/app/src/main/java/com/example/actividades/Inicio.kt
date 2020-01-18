@@ -1,5 +1,6 @@
 package com.example.actividades
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.example.clases.Auxiliar
@@ -44,11 +45,10 @@ class Inicio : AppCompatActivity(), CoroutineScope by MainScope() {
             }
         }
         botonObteneventanainfogrupo.setOnClickListener {
-            // lanzar corutina
-            launch {
 
-                setContentView(R.layout.activity_grupoxchallenge)
-            }
+            val intent = Intent(this, contr_grupoxchalenge::class.java)
+            startActivity(intent)
+
         }
     }
     // OBTENER CHALLENGES
