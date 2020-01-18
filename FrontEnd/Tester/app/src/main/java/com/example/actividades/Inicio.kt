@@ -47,7 +47,7 @@ class Inicio : AppCompatActivity(), CoroutineScope by MainScope() {
             // lanzar corutina
             launch {
 
-                setContentView(R.layout.activity_pall_infogrupo)
+                setContentView(R.layout.activity_grupoxchallenge)
             }
         }
     }
