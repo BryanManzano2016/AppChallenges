@@ -57,8 +57,8 @@
 
         <TextView
             android:id="@+id/labelintereses2"
-            android:layout_width="125dp"
-            android:layout_height="41dp"
+            android:layout_width="152dp"
+            android:layout_height="37dp"
             android:text="Challenges"
             android:textAllCaps="false"
             android:textColor="#133F76"
@@ -116,30 +116,78 @@
             app:srcCompat="@drawable/lupabusqueda"
             tools:ignore="MissingConstraints" />
 
+
         <TableLayout
-            android:layout_width="0dp"
-            android:layout_height="224dp"
+            android:id="@+id/tableLayout"
+            android:layout_width="381dp"
+            android:layout_height="240dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="10dp"
+            android:isScrollContainer="true"
+            android:scrollbarStyle="insideInset"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/barrabusqueda">
+            android:scrollbarAlwaysDrawHorizontalTrack="false"
+
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/guideline8"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="@+id/guideline7"
             app:layout_constraintTop_toBottomOf="@+id/barrabusqueda">
 
-            <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
 
             <TableRow
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="match_parent">
+
+                <ImageButton
+                    android:id="@+id/imageButton2"
+                    android:layout_width="178dp"
+                    android:layout_height="100dp"
+                    android:src="@android:drawable/star_big_on" />
+
+                <ImageButton
+                    android:id="@+id/imageButton3"
+                    android:layout_width="186dp"
+                    android:layout_height="match_parent"
+                    android:src="@android:drawable/star_big_on" />
+            </TableRow>
 
             <TableRow
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="match_parent">
+
+                <ImageButton
+                    android:id="@+id/imageButton4"
+                    android:layout_width="154dp"
+                    android:layout_height="100dp"
+                    android:src="@android:drawable/ic_delete" />
+
+                <ImageButton
+                    android:id="@+id/imageButton5"
+                    android:layout_width="154dp"
+                    android:layout_height="match_parent"
+                    android:src="@android:drawable/ic_delete" />
+            </TableRow>
 
             <TableRow
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="54dp">
+
+                <ImageButton
+                    android:id="@+id/imageButton6"
+                    android:layout_width="178dp"
+                    android:layout_height="100dp"
+                    android:src="@android:drawable/checkbox_on_background" />
+
+                <ImageButton
+                    android:id="@+id/imageButton7"
+                    android:layout_width="178dp"
+                    android:layout_height="100dp"
+                    android:src="@android:drawable/checkbox_on_background" />
+            </TableRow>
+
         </TableLayout>
 
         <androidx.constraintlayout.widget.Guideline
@@ -154,7 +202,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            app:layout_constraintGuide_begin="103dp"
+            app:layout_constraintGuide_begin="383dp"
             app:layout_constraintGuide_percent="0.93" />
 
         <LinearLayout
