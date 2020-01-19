@@ -95,8 +95,7 @@ insert into Group_student values (13,8);
 
 #Challenge
 insert into Challenge values (default,"2019-12-15","2020-02-02",1,"Space Apps Challenge","Ciencia"
-,"https://2019.spaceappschallenge.org/lead","https://www.esa.int/var/esa/storage/images/esa_multimedia
- /images/2014/03/space_apps_challenge_logo/14334849-1-eng-GB/Space_Apps_Challenge_Logo_pillars.jpg",1823);
+,"https://2019.spaceappschallenge.org/lead","https://www.esa.int/var/esa/storage/images/esa_multimedia/images/2014/03/space_apps_challenge_logo/14334849-1-eng-GB/Space_Apps_Challenge_Logo_pillars.jpg",1823);
 insert into Challenge values (default,"2019-12-08","2020-02-29",1,"BITEhack","Robotica","https://bitehack.best.krakow.pl/?",
  "https://challengerocket.com/photo_main_big/files/company/18/2019/12/cce810440a372030.jpg",2923);
 insert into Challenge values (default,"2020-01-01","2020-03-01",1,"Europa Commission","Ecología","https://ec.europa.eu/research/eic/index.cfm?"

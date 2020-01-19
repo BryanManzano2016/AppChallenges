@@ -20,6 +20,8 @@ type Challenge struct {
 	URL       string `json:"url"`
 	Info      string `json:"info"`
 	Categoria string `json:"categoria"`
+	Tfavorite string `json:"meGustas"`
+	Date_inicio string `json:"fechaInicio"`
 }
 
 type Grupos struct {
@@ -37,7 +39,7 @@ type Respuesta struct {
 // !!! user:password@tcp(127.0.0.1:3306)/database ¡¡¡
 var configuracionMysql = "root:@tcp(127.0.0.1:3306)/groupchallenges"
 var puertoServidor = "9000"
-var ip = "192.168.200.11"
+var ip = "192.168.100.81"
 
 func main() {
 	// Ejecutar en consola:                    go run challengesServidor.go
@@ -91,11 +93,13 @@ func obtenerChallenges(w http.ResponseWriter, r *http.Request) {
 				var url string
 				var info string
 				var categoria string
+				var tfavorite string
+				var date_inicio string
 				// Guardar los campos en las variables
-				err = resultados.Scan(&nombre, &url, &info, &categoria)
+				err = resultados.Scan(&nombre, &url, &info, &categoria, &tfavorite, &date_inicio)
 				// Crear el struct y luego añadir al array
 				challenge := Challenge{Nombre: nombre, URL: url, Info: info,
-					Categoria: categoria}
+					Categoria: categoria, Tfavorite: tfavorite, Date_inicio: date_inicio}
 				lista = append(lista, challenge)
 
 				if err != nil {

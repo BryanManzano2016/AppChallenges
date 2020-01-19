@@ -1,13 +1,16 @@
 package com.example.clases
 
+import android.widget.ImageView
+import android.widget.TextView
 import com.squareup.okhttp.*
+import com.squareup.picasso.Picasso
 import org.json.JSONArray
 import org.json.JSONObject
 import kotlin.contracts.Returns
 
 class Auxiliar {
 
-    val direccion_ip= "http://192.168.200.11:9000/"
+    val direccion_ip= "http://192.168.100.81:9000/"
 
     fun obtener_Ip(): String {
         return direccion_ip.toString()
@@ -52,8 +55,18 @@ class Auxiliar {
     fun objectoChallenge( objeto: JSONObject ): Challenge{
         return Challenge(
                 objeto.get("nombre").toString(), objeto.get("url").toString(),
-                objeto.get("info").toString(), objeto.get("categoria").toString()
+                objeto.get("info").toString(), objeto.get("categoria").toString(), objeto.get("meGustas").toString(),objeto.get("fechaInicio").toString()
         )
+    }
+
+    fun colocarImagen(imagen: ImageView, url: String, texto: TextView, nombre: String){
+        Picasso.get()
+                .load(url)
+                .resize(150, 150)
+                .centerCrop()
+                .into(imagen)
+        texto.text=nombre
+
     }
 
 

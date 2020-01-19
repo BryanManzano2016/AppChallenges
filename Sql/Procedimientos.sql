@@ -30,14 +30,14 @@ DROP PROCEDURE IF EXISTS verfgrupovacio;
 Delimiter //
 create procedure verChallenges()
 	begin
-		select name, url_img, info, category from challenge where status=1;
+		select name, url_img, info, category, Tfavorite, date_start from challenge where status=1 order by Tfavorite DESC;
 	end //
 Delimiter ;
 
 Delimiter //
 create procedure challengesCategoria( in categoria varchar(50) )
 	begin
-		select name, url_img, info, category from challenge where status=1 and categoria=category;
+		select name, url_img, info, category, Tfavorite from challenge where status=1 order by Tfavorite DESC;
 	end //
 Delimiter ;
 
