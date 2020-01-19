@@ -18,4 +18,8 @@ class contr_grupoxchalenge : AppCompatActivity() {
         lViewgrupos.setOnItemClickListener { adapterView, view, i, l ->
             setContentView(R.layout.activity_pall_infogrupo)}
     }
+
+    fun obtenerGrupos(){
+
+    }
 }

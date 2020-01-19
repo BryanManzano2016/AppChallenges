@@ -11,6 +11,10 @@ import java.util.*
 import androidx.core.app.ComponentActivity
 import androidx.core.content.ContextCompat.getSystemService
 import android.icu.lang.UCharacter.GraphemeClusterBreak.T
+import androidx.fragment.app.Fragment
+import com.google.android.material.bottomnavigation.BottomNavigationView
+import kotlinx.android.synthetic.main.activity_main.bottom_navigation
+import kotlinx.android.synthetic.main.activity_principal.*
 import java.text.SimpleDateFormat
 import java.time.Month
 
@@ -22,7 +26,7 @@ class Inicio : AppCompatActivity(), CoroutineScope by MainScope() {
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
+        bottom_navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
         inicializarComponentesGUI()
         inicializarEventos()
 
@@ -161,6 +165,28 @@ class Inicio : AppCompatActivity(), CoroutineScope by MainScope() {
                     "{\"idChallenge\":3}")
             return@withContext JSONArray(Auxiliar().respuestaString(solicitud.body()))
         }
+    }
+
+    private fun remplazarfragmento(fragment: Fragment){
+        val fragmentTransition= supportFragmentManager.beginTransaction()
+        fragmentTransition.replace(R.id.fragmentoContenedor,fragment)
+        fragmentTransition.commit()
+    }
+
+    private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item->
+        when (item.itemId) {
+            R.id.nav_home -> {
+                remplazarfragmento(fragmento_home())
+                return@OnNavigationItemSelectedListener true }
+            R.id.nav_favorites ->{
+                remplazarfragmento(fragmento_busqueda())
+                return@OnNavigationItemSelectedListener true }
+            R.id.nav_search -> {
+                remplazarfragmento(fragmento_intereses())
+                return@OnNavigationItemSelectedListener true }
+        }
+        false
+
     }
 }
 
