@@ -35,7 +35,8 @@ class principal : AppCompatActivity() {
             startActivity(intent)
             return@OnNavigationItemSelectedListener true }
         R.id.nav_search -> {
-            remplazarfragmento(fragmento_busqueda())
+            val intent = Intent(this, busqueda::class.java)
+            startActivity(intent)
             return@OnNavigationItemSelectedListener true }
         }
         false 

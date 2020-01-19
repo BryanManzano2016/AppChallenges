@@ -7,7 +7,8 @@ import androidx.fragment.app.Fragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.android.synthetic.main.activity_principal.*
 
-class tus_intereses : AppCompatActivity() {
+
+class busqueda : AppCompatActivity() {
     private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item->
         when (item.itemId) {
             R.id.nav_home -> {
@@ -19,7 +20,7 @@ class tus_intereses : AppCompatActivity() {
                 startActivity(intent)
                 return@OnNavigationItemSelectedListener true }
             R.id.nav_search -> {
-                val intent = Intent(this,busqueda::class.java)
+                val intent = Intent(this, busqueda::class.java)
                 startActivity(intent)
                 return@OnNavigationItemSelectedListener true }
         }
@@ -29,7 +30,7 @@ class tus_intereses : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_frag_intereses)
+        setContentView(R.layout.activity_frag_busqueda)
         bottom_navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
     }
 }

@@ -14,7 +14,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".tus_intereses"></activity>
-        <activity android:name=".frag_busqueda"></activity>
+        <activity android:name=".busqueda"></activity>
 
         <activity android:name=".principal">
             <intent-filter>
