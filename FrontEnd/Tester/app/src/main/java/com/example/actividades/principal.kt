@@ -15,7 +15,6 @@ import androidx.core.content.ContextCompat.getSystemService
 import android.icu.lang.UCharacter.GraphemeClusterBreak.T
 import android.widget.ImageView
 import com.example.clases.Challenge
-import kotlinx.android.synthetic.main.activity_main.bottom_navigation
 import java.text.SimpleDateFormat
 import java.time.Month
 import kotlin.collections.HashMap
@@ -30,6 +29,7 @@ class principal : AppCompatActivity() {
         R.id.nav_home -> {
             val intent = Intent(this, principal::class.java)
             startActivity(intent)
+            //remplazarfragmento( fragmento_home())
             return@OnNavigationItemSelectedListener true }
         R.id.nav_favorites ->{
             remplazarfragmento(fragmento_busqueda())

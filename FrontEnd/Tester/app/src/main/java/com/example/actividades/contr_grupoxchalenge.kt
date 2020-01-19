@@ -6,7 +6,6 @@ import android.widget.ListView
 import com.example.clases.Auxiliar
 import com.example.clases.Challenge
 import com.example.clases.Grupos
-import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -49,7 +48,7 @@ class contr_grupoxchalenge : AppCompatActivity() {
                     }
 
                     lViewgrupos= findViewById(R.id.lViewgrupos)
-                    val adaptador1= ArrayAdapter<Grupos>(this@contr_grupoxchalenge, R.layout.list_item_grupos, nombresGrupos)
+                    val adaptador1= ArrayAdapter<Grupos>(this@contr_grupoxchalenge, R.menu.list_item_grupos, nombresGrupos)
                     lViewgrupos.adapter = adaptador1
                     lViewgrupos.setOnItemClickListener { adapterView, view, i, l ->
                         setContentView(R.layout.activity_pall_infogrupo)}
