@@ -118,14 +118,13 @@
             style="@android:style/Widget.Holo.Light.ImageButton"
             android:layout_width="100dp"
             android:layout_height="100dp"
-            android:layout_marginStart="40dp"
             android:background="#19FFFFFF"
             app:layout_constraintBottom_toBottomOf="@+id/challenge2"
             app:layout_constraintEnd_toStartOf="@+id/challenge2"
-            app:layout_constraintHorizontal_bias="0.041"
+            app:layout_constraintHorizontal_bias="0.593"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/challenge2"
-            app:layout_constraintVertical_bias="0.0"
+            app:layout_constraintVertical_bias="1.0"
             app:srcCompat="@mipmap/ic_launcher_round" />
 
         <ImageButton

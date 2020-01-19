@@ -46,6 +46,10 @@ var configuracionMysql = "root:root@tcp(127.0.0.1:3306)/groupchallenges"
 var ip = "192.168.100.133"
 
 var puertoServidor = "9000"
+<<<<<<< HEAD
+=======
+var ip = "192.168.100.81"
+>>>>>>> b985d69cbf78d90010ad3cb5ccde32ef421a81b2
 
 func main() {
 	// Ejecutar en consola:                    go run challengesServidor.go

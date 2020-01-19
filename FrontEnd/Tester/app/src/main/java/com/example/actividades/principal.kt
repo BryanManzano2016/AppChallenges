@@ -29,13 +29,14 @@ class principal : AppCompatActivity() {
         R.id.nav_home -> {
             val intent = Intent(this, principal::class.java)
             startActivity(intent)
-            //remplazarfragmento( fragmento_home())
             return@OnNavigationItemSelectedListener true }
         R.id.nav_favorites ->{
-            remplazarfragmento(fragmento_busqueda())
+            val intent = Intent(this, tus_intereses::class.java)
+            startActivity(intent)
             return@OnNavigationItemSelectedListener true }
         R.id.nav_search -> {
-            remplazarfragmento(fragmento_intereses())
+            val intent = Intent(this, busqueda::class.java)
+            startActivity(intent)
             return@OnNavigationItemSelectedListener true }
         }
         false 

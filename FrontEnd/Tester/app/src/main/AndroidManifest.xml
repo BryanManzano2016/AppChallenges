@@ -13,9 +13,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".frag_intereses"></activity>
-        <activity android:name=".frag_busqueda" ></activity>
-        <activity android:name=".frag_home" ></activity>
+        <activity android:name=".tus_intereses"></activity>
+        <activity android:name=".busqueda"></activity>
+
         <activity android:name=".principal">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -23,9 +23,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".contr_grupoxchalenge"></activity>
-        <activity android:name=".controlador_pall_infogrupo"></activity>
-        <activity android:name=".FiltrarChallenge"></activity>
+        <activity android:name=".contr_grupoxchalenge" />
+        <activity android:name=".controlador_pall_infogrupo" />
+        <activity android:name=".FiltrarChallenge" />
     </application>
 
 </manifest>
