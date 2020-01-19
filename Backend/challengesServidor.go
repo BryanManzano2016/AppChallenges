@@ -3,6 +3,7 @@ package main
 import (
 	"database/sql"
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -16,11 +17,11 @@ import (
 */
 
 type Challenge struct {
-	Nombre    string `json:"nombre"`
-	URL       string `json:"url"`
-	Info      string `json:"info"`
-	Categoria string `json:"categoria"`
-	Tfavorite string `json:"meGustas"`
+	Nombre      string `json:"nombre"`
+	URL         string `json:"url"`
+	Info        string `json:"info"`
+	Categoria   string `json:"categoria"`
+	Tfavorite   string `json:"meGustas"`
 	Date_inicio string `json:"fechaInicio"`
 }
 
@@ -37,9 +38,14 @@ type Respuesta struct {
 }
 
 // !!! user:password@tcp(127.0.0.1:3306)/database ¡¡¡
-var configuracionMysql = "root:@tcp(127.0.0.1:3306)/groupchallenges"
+
+// var configuracionMysql = "root:@tcp(127.0.0.1:3306)/groupchallenges"
+var configuracionMysql = "root:root@tcp(127.0.0.1:3306)/groupchallenges"
+
+// var ip = "192.168.200.11"
+var ip = "192.168.100.133"
+
 var puertoServidor = "9000"
-var ip = "192.168.200.11"
 
 func main() {
 	// Ejecutar en consola:                    go run challengesServidor.go
@@ -245,14 +251,17 @@ func obtenerGruposChallenges(w http.ResponseWriter, r *http.Request) {
 	jsonRecibido, err2 := ioutil.ReadAll(r.Body)
 	defer r.Body.Close()
 	db, err := sql.Open("mysql", configuracionMysql)
-
 	if err != nil || err2 != nil {
 		json.NewEncoder(w).Encode(respuestaArreglo(0))
 	} else {
 		defer db.Close()
+		// `{"idChallenge": 2}`
 		jsonData := []byte(jsonRecibido)
 		var data map[string]interface{}
 		json.Unmarshal([]byte(jsonData), &data)
+
+		fmt.Println(data)
+
 		results, err := db.Query("call gruposxChallenge(?)", data["idChallenge"])
 
 		if err != nil {
@@ -266,6 +275,7 @@ func obtenerGruposChallenges(w http.ResponseWriter, r *http.Request) {
 
 				err = results.Scan(&grupoNombre, &urlWp, &descripcion)
 				grupos := Grupos{NombreGrupo: grupoNombre, UrlWp: urlWp, Descripcion: descripcion}
+
 				lista = append(lista, grupos)
 
 				if err != nil {

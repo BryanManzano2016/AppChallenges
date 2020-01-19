@@ -11,7 +11,8 @@ import kotlin.contracts.Returns
 
 class Auxiliar {
 
-    val direccion_ip= "http://192.168.200.11:9000/"
+    // val direccion_ip= "http://192.168.200.11:9000/"
+    val direccion_ip= "http://192.168.100.133:9000/"
 
     fun obtener_Ip(): String {
         return direccion_ip.toString()
@@ -19,6 +20,7 @@ class Auxiliar {
 
     // Genera una solicitud http en formato get dado una url
     fun solicitudHttpGet(url: String): Response{
+        println("***SOLICITUD GET***")
         // Ejemplo de url -> "http://192.168.100.133:9000/obtenerChallenges"
         return OkHttpClient().newCall( Request.Builder()
                 .url(url)
@@ -26,6 +28,7 @@ class Auxiliar {
     }
 
     fun solicitudHttpPost(url: String, cadenaEnvio: String): Response{
+        println("***SOLICITUD POST***")
         val body: RequestBody = RequestBody.create(
                 MediaType.parse("application/json; charset=utf-8"),
                 cadenaEnvio)
@@ -55,15 +58,16 @@ class Auxiliar {
     // Crear challenge a a partir d eun JSONObject
     fun objectoChallenge( objeto: JSONObject ): Challenge{
         return Challenge(
-                objeto.get("nombre").toString(), objeto.get("url").toString(),
-                objeto.get("info").toString(), objeto.get("categoria").toString(), objeto.get("meGustas").toString(),objeto.get("fechaInicio").toString()
+                objeto.get("nombre").toString(), objeto.get("url").toString(), objeto.get("info").toString(),
+                objeto.get("categoria").toString(), objeto.get("meGustas").toString(),
+                objeto.get("fechaInicio").toString()
         )
     }
 
     fun objetoGrupo(objeto: JSONObject): Grupos{
             return Grupos(
-                    objeto.get("grupoNombre").toString(),objeto.get("descripcion").toString(), objeto.get("codeGrupo").toString(),
-                    objeto.get("fechaGrupo").toString(),objeto.get("url_whatsapp").toString()
+                    objeto.get("grupoNombre").toString(),objeto.get("descripcion").toString(),
+                    objeto.get("codeGrupo").toString(), objeto.get("url_whatsapp").toString()
             )
     }
 

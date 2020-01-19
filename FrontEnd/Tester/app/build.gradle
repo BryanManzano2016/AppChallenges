@@ -17,14 +17,14 @@ android {
     }
     buildTypes {
         release {
-            minifyEnabled true
-            shrinkResources true
+            minifyEnabled false
+            // shrinkResources true
 
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
         debug {
-            ext.enableCrashlytics = false
-            ext.alwaysUpdateBuildId = false
+            // ext.enableCrashlytics = false
+            // ext.alwaysUpdateBuildId = false
         }
     } 
 }

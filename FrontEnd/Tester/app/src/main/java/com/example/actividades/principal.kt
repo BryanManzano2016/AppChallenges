@@ -51,22 +51,28 @@ class principal : AppCompatActivity() {
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_principal)
+
         inicializarComponentesGUI()
         inicializarEventos()
+
         bottom_navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
     }
 
-    fun inicializarComponentesGUI() {
+    fun inicializarEventos() {
+
         challenge3.setOnClickListener {
-            //aqui debe enviar a la pantalla de unir grupo -- hacer esta transicion..
-            setContentView(R.layout.activity_grupoxchallenge) // la envie aca
+
+            val intent = Intent(this, contr_grupoxchalenge::class.java)
+            var arregloEnviar = arrayOf("2")
+            intent.putExtra("arreglo", arregloEnviar)
+            startActivity(intent)
 
         }
 
     }
 
 
-    fun inicializarEventos() {
+    fun inicializarComponentesGUI() {
         GlobalScope.launch {
             CargarChallengesDestacados()
             CargarChallengesRecientes()
@@ -95,8 +101,6 @@ class principal : AppCompatActivity() {
                         val strDate = sdf.parse(it.fechaInicio)
                         val strCom = sdf.parse("2019-12-15")
                         if (Date().after(strDate) and strCom.before(strDate)) {
-                            print("***********************************************")
-                            print(strDate.month)
                             urls.add(it.url)
                             nombres.add(it.nombre)
                         }
@@ -140,7 +144,6 @@ class principal : AppCompatActivity() {
         return withContext(Dispatchers.Default) {
             val solicitud = Auxiliar().solicitudHttpGet(
                     Auxiliar().obtener_Ip() + "obtenerChallenges"
-
             )
             val respuesta = Auxiliar().respuestaString(solicitud.body())
             return@withContext JSONArray(respuesta)
