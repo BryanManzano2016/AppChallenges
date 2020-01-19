@@ -46,7 +46,7 @@ class Inicio : AppCompatActivity(), CoroutineScope by MainScope() {
         }
         botonObteneventanainfogrupo.setOnClickListener {
 
-            val intent = Intent(this, contr_grupoxchalenge::class.java)
+            val intent = Intent(this, principal::class.java)
             startActivity(intent)
 
         }
