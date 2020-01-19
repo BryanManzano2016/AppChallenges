@@ -6,6 +6,7 @@ import com.squareup.okhttp.*
 import com.squareup.picasso.Picasso
 import org.json.JSONArray
 import org.json.JSONObject
+import java.security.acl.Group
 import kotlin.contracts.Returns
 
 class Auxiliar {
@@ -57,6 +58,13 @@ class Auxiliar {
                 objeto.get("nombre").toString(), objeto.get("url").toString(),
                 objeto.get("info").toString(), objeto.get("categoria").toString(), objeto.get("meGustas").toString(),objeto.get("fechaInicio").toString()
         )
+    }
+
+    fun objetoGrupo(objeto: JSONObject): Grupos{
+            return Grupos(
+                    objeto.get("grupoNombre").toString(),objeto.get("descripcion").toString(), objeto.get("codeGrupo").toString(),
+                    objeto.get("fechaGrupo").toString(),objeto.get("url_whatsapp").toString()
+            )
     }
 
     fun colocarImagen(imagen: ImageView, url: String, texto: TextView, nombre: String){

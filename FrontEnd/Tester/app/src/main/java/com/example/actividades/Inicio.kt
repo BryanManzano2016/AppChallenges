@@ -11,12 +11,15 @@ import java.util.*
 import androidx.core.app.ComponentActivity
 import androidx.core.content.ContextCompat.getSystemService
 import android.icu.lang.UCharacter.GraphemeClusterBreak.T
+import android.widget.ImageView
 import androidx.fragment.app.Fragment
+import com.example.clases.Challenge
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.android.synthetic.main.activity_main.bottom_navigation
 import kotlinx.android.synthetic.main.activity_principal.*
 import java.text.SimpleDateFormat
 import java.time.Month
+import kotlin.collections.HashMap
 
 @Suppress("DEPRECATION")
 class Inicio : AppCompatActivity(), CoroutineScope by MainScope() {
@@ -33,7 +36,12 @@ class Inicio : AppCompatActivity(), CoroutineScope by MainScope() {
     }
 
     fun inicializarComponentesGUI() {
-        // code
+        challenge3.setOnClickListener {
+            //aqui debe enviar a la pantalla de unir grupo -- hacer esta transicion..
+            setContentView(R.layout.activity_grupoxchallenge) // la envie aca
+
+        }
+
     }
 
 
@@ -119,8 +127,8 @@ class Inicio : AppCompatActivity(), CoroutineScope by MainScope() {
     }
 
     // OBTENER CHALLENGES POR CATEGORIA
-    private suspend fun obtenerChallengesCategoriaCt() {
-        val resultadoSolicitud = obtenerChallengesCategoria()
+    private suspend fun obtenerChallengesCategoriaCt(cat : String) {
+        val resultadoSolicitud = obtenerChallengesCategoria(cat)
         withContext(Dispatchers.Main) {
             when (Auxiliar().mensajeServidor(resultadoSolicitud)) {
                 0 -> print("0")
@@ -137,11 +145,11 @@ class Inicio : AppCompatActivity(), CoroutineScope by MainScope() {
         }
     }
 
-    private suspend fun obtenerChallengesCategoria(): JSONArray {
+    private suspend fun obtenerChallengesCategoria(cat:String ): JSONArray {
         return withContext(Dispatchers.Default) {
             val solicitud = Auxiliar().solicitudHttpPost(
                     Auxiliar().obtener_Ip() + "obtenerChallengesCategoria",
-                    "{\"categoria\":\"Ciencia\"}")
+                    "{\"categoria\":\""+cat+"\"\"}")
             return@withContext JSONArray(Auxiliar().respuestaString(solicitud.body()))
         }
     }
