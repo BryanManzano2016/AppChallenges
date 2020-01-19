@@ -4,7 +4,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.example.clases.Auxiliar
 import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.activity_principal.*
 import kotlinx.coroutines.*
 import org.json.JSONArray
 import java.util.*

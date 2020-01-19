@@ -11,7 +11,7 @@ import kotlin.contracts.Returns
 
 class Auxiliar {
 
-    val direccion_ip= "http://192.168.100.81:9000/"
+    val direccion_ip= "http://192.168.200.11:9000/"
 
     fun obtener_Ip(): String {
         return direccion_ip.toString()

@@ -14,37 +14,18 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".frag_intereses"></activity>
-        <activity android:name=".frag_busqueda" />
-        <activity android:name=".principal" />
-        <activity android:name=".frag_home" />
-        <activity android:name=".Inicio">
+        <activity android:name=".frag_busqueda" ></activity>
+        <activity android:name=".frag_home" ></activity>
+        <activity android:name=".principal">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".contr_grupoxchalenge">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-        <activity android:name=".controlador_pall_infogrupo">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-        <activity android:name=".FiltrarChallenge">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+        <activity android:name=".contr_grupoxchalenge"></activity>
+        <activity android:name=".controlador_pall_infogrupo"></activity>
+        <activity android:name=".FiltrarChallenge"></activity>
     </application>
 
 </manifest>
