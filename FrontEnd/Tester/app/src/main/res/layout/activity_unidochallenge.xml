@@ -42,14 +42,6 @@
         android:orientation="vertical"
         app:layout_constraintGuide_begin="383dp" />
 
-    <ImageView
-        android:id="@+id/imageView3"
-        android:layout_width="0dp"
-        android:layout_height="138dp"
-        app:srcCompat="@drawable/me_encanta"
-        tools:layout_editor_absoluteX="458dp"
-        tools:layout_editor_absoluteY="660dp" />
-
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline14"
         android:layout_width="wrap_content"
@@ -79,11 +71,12 @@
         android:id="@+id/imageView6"
         android:layout_width="54dp"
         android:layout_height="48dp"
+        android:layout_marginStart="60dp"
         app:layout_constraintBottom_toBottomOf="@+id/imageView2"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/imageView2"
         app:layout_constraintVertical_bias="0.38"
-        app:srcCompat="@drawable/me_encanta"
-        tools:layout_editor_absoluteX="50dp" />
+        app:srcCompat="@drawable/me_encanta" />
 
     <ImageView
         android:id="@+id/imageView7"
@@ -125,5 +118,13 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/iconretorno" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="1830"
+        tools:layout_editor_absoluteX="78dp"
+        tools:layout_editor_absoluteY="579dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -19,6 +19,8 @@ import java.text.SimpleDateFormat
 import java.time.Month
 import kotlin.collections.HashMap
 import android.content.Intent
+import com.example.layout.info_challenge
+import com.example.layout.unidochallenge
 
 @Suppress("DEPRECATION")
 
@@ -62,21 +64,21 @@ class principal : AppCompatActivity() {
 
         challenge3.setOnClickListener {
 
-            val intent = Intent(this, contr_grupoxchalenge::class.java)
+            val intent = Intent(this, info_challenge::class.java)
             var arregloEnviar = arrayOf("12")
             intent.putExtra("arreglo", arregloEnviar)
             startActivity(intent)
 
         }
         Challenge1.setOnClickListener {
-            val intent = Intent(this, contr_grupoxchalenge::class.java)
+            val intent = Intent(this, info_challenge::class.java)
             var arregloEnviar = arrayOf("2")
             intent.putExtra("arreglo", arregloEnviar)
             startActivity(intent)
         }
 
         challenge5.setOnClickListener {
-            val intent = Intent(this, contr_grupoxchalenge::class.java)
+            val intent = Intent(this, info_challenge::class.java)
             var arregloEnviar = arrayOf("1")
             intent.putExtra("arreglo", arregloEnviar)
             startActivity(intent)

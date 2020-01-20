@@ -17,6 +17,7 @@ import kotlinx.coroutines.withContext
 import org.json.JSONArray
 import java.util.*
 import android.widget.LinearLayout
+import com.example.layout.info_challenge
 
 
 class busqueda : AppCompatActivity() {
@@ -78,7 +79,7 @@ class busqueda : AppCompatActivity() {
                             tableLayout2.addView(lineal)
                             val arregloEnviar = arrayOf(it.code_challenges)
                             img.setOnClickListener {
-                            val intent = Intent(this@busqueda, contr_grupoxchalenge::class.java)
+                            val intent = Intent(this@busqueda, info_challenge::class.java)
 
                             intent.putExtra("arreglo", arregloEnviar)
                             startActivity(intent)

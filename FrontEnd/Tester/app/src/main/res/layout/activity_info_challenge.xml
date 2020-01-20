@@ -42,14 +42,6 @@
         android:orientation="vertical"
         app:layout_constraintGuide_begin="383dp" />
 
-    <ImageView
-        android:id="@+id/imageView3"
-        android:layout_width="0dp"
-        android:layout_height="138dp"
-        app:srcCompat="@drawable/me_encanta"
-        tools:layout_editor_absoluteX="458dp"
-        tools:layout_editor_absoluteY="660dp" />
-
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline14"
         android:layout_width="wrap_content"
