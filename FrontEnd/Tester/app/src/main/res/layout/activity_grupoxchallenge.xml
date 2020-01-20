@@ -33,6 +33,7 @@
         android:textSize="30sp"
         android:textStyle="bold"
         android:typeface="sans"
+        app:fontFamily="cursive"
         android:visibility="visible"
         app:layout_constraintBottom_toTopOf="@+id/guideline6"
         app:layout_constraintEnd_toStartOf="@+id/guideline12"
