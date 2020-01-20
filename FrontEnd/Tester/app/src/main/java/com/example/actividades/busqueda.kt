@@ -4,15 +4,11 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.ImageButton
-import android.widget.TableRow
-import androidx.core.view.size
-import androidx.fragment.app.Fragment
 import com.example.clases.Auxiliar
 import com.example.clases.Challenge
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_frag_busqueda.*
-import kotlinx.android.synthetic.main.activity_principal.*
 import kotlinx.android.synthetic.main.activity_principal.bottom_navigation
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -20,16 +16,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.json.JSONArray
 import java.util.*
-import kotlin.collections.HashMap
-import android.view.ViewGroup.LayoutParams.FILL_PARENT
-import android.widget.TableLayout
-import androidx.core.content.ContextCompat.getSystemService
-import android.icu.lang.UCharacter.GraphemeClusterBreak.T
-import android.view.ViewGroup
-import android.view.ViewGroup.LayoutParams.FILL_PARENT
-import androidx.core.app.ComponentActivity
-import androidx.core.content.ContextCompat.getSystemService
-import android.icu.lang.UCharacter.GraphemeClusterBreak.T
 import android.widget.LinearLayout
 
 
@@ -79,7 +65,7 @@ class busqueda : AppCompatActivity() {
                     }
 
 
-                    tableLayout.setColumnStretchable(1,true)
+                    tableLayout2.setColumnStretchable(1,true)
 
                     listaBusqueda.forEach {
                         val img= ImageButton(this@busqueda)
@@ -90,7 +76,7 @@ class busqueda : AppCompatActivity() {
                                 .centerCrop()
                                 .into(img)
                             lineal.addView(img)
-                            tableLayout.addView(lineal)
+                            tableLayout2.addView(lineal)
                             val arregloEnviar = arrayOf(it.code_challenges)
                             img.setOnClickListener {
                             val intent = Intent(this@busqueda, contr_grupoxchalenge::class.java)

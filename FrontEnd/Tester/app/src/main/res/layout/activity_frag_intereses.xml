@@ -6,42 +6,41 @@
     android:layout_height="match_parent"
     android:id="@+id/fragmentointeres"
     tools:context=".tus_intereses">
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/fragment_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@id/bottom_navigation">
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/barSuperior"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:background="#DBCDF2"
-        android:minHeight="?attr/actionBarSize"
-        android:theme="?attr/actionBarTheme"
-        app:layout_constraintBottom_toTopOf="@+id/guideline"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0"
-        tools:ignore="MissingConstraints" />
+        android:layout_above="@id/bottom_navigation"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="0dp"
+        android:layout_marginBottom="0dp">
 
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.09950249" />
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/barSuperior"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="#DBCDF2"
+            android:minHeight="?attr/actionBarSize"
+            android:theme="?attr/actionBarTheme"
+            app:layout_constraintBottom_toTopOf="@+id/guideline"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="1.0"
+            tools:ignore="MissingConstraints" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.09950249" />
 
         <TextView
             android:id="@+id/labelintereses"
-            app:fontFamily="cursive"
-            app:layout_constraintBottom_toBottomOf="@+id/barSuperior"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.497"
-            app:layout_constraintStart_toStartOf="@+id/barSuperior"
-            app:layout_constraintTop_toTopOf="@+id/barSuperior"
-            app:layout_constraintVertical_bias="1.0"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Tus Interes"
@@ -52,27 +51,30 @@
             android:textStyle="bold"
             android:typeface="sans"
             android:visibility="visible"
+            app:fontFamily="cursive"
+            app:layout_constraintBottom_toBottomOf="@+id/barSuperior"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.497"
+            app:layout_constraintStart_toStartOf="@+id/barSuperior"
+            app:layout_constraintTop_toTopOf="@+id/barSuperior"
+            app:layout_constraintVertical_bias="1.0"
             tools:ignore="MissingConstraints"
             tools:layout_editor_absoluteX="80dp"
             tools:layout_editor_absoluteY="249dp" />
 
         <ImageView
             android:id="@+id/imageView"
+            android:layout_width="80dp"
+            android:layout_height="48dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/guideline"
             app:srcCompat="@drawable/vista"
-            android:layout_width="80dp"
-            android:layout_height="48dp"
             tools:layout_editor_absoluteX="165dp"
             tools:layout_editor_absoluteY="125dp" />
 
         <TextView
             android:id="@+id/textasociados"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.496"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/imageView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Challenges Asociados"
@@ -80,33 +82,43 @@
             android:textIsSelectable="false"
             android:textSize="26sp"
             android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.496"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imageView"
             tools:layout_editor_absoluteX="76dp"
             tools:layout_editor_absoluteY="173dp" />
 
-        <TableLayout
-        android:layout_width="0dp"
-        android:layout_height="371dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/guideline8"
-        app:layout_constraintStart_toStartOf="@+id/guideline7"
-        app:layout_constraintTop_toBottomOf="@+id/textasociados">
+        <ScrollView
+            android:id="@+id/root_layout2"
+            style="@android:style/Widget.DeviceDefault.ScrollView"
+            android:layout_width="367dp"
+            android:layout_height="375dp"
+            android:layout_marginTop="244dp"
+            android:animationCache="false"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.38"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/barrabusqueda"
+            app:layout_constraintVertical_bias="1.0">
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/barrabusqueda">
+            app:layout_constraintHorizontal_bias="1.0"
 
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-    </TableLayout>
+            <TableLayout
+                android:id="@+id/tableLayout"
+                android:layout_width="381dp"
+                android:layout_height="240dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="10dp"
+                android:isScrollContainer="true"
+                android:scrollbarStyle="insideInset"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/barrabusqueda" />
+        </ScrollView>
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline7"
@@ -122,6 +134,7 @@
             android:orientation="vertical"
             app:layout_constraintGuide_percent="0.93" />
     </androidx.constraintlayout.widget.ConstraintLayout>
+
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation"
         android:layout_width="match_parent"

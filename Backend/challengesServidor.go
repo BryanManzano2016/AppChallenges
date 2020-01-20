@@ -64,6 +64,7 @@ func main() {
 	http.HandleFunc("/eliminarGrupoChallenge", eliminarGrupoChallenge)
 	http.HandleFunc("/menosEncantaChallenge", menosEncantaChallenge)
 	http.HandleFunc("/crearChallenge", crearChallenge)
+	http.HandleFunc("/obtenerChallengesInteresados",obtenerChallengesInteresados)
 
 	// En lugar de localhost puede ir la ip del servidor. Ademas es obligatorio desbloquear el puerto 9000
 	log.Fatal(http.ListenAndServe(ip+":"+puertoServidor, nil))
@@ -285,6 +286,53 @@ func obtenerGruposChallenges(w http.ResponseWriter, r *http.Request) {
 					json.NewEncoder(w).Encode(respuestaArreglo(0))
 				}
 			}
+			json.NewEncoder(w).Encode(lista)
+		}
+	}
+}
+
+func obtenerChallengesInteresados(w http.ResponseWriter, r *http.Request) {
+
+	jsonRecibido, err2 := ioutil.ReadAll(r.Body)
+	defer r.Body.Close()
+	db, err := sql.Open("mysql", configuracionMysql)
+	if err != nil || err2 != nil {
+		json.NewEncoder(w).Encode(respuestaArreglo(0))
+	} else {
+		defer db.Close()
+		// `{"idChallenge": 2}`
+		jsonData := []byte(jsonRecibido)
+		var data map[string]interface{}
+		json.Unmarshal([]byte(jsonData), &data)
+
+		fmt.Println(data)
+
+		results, err := db.Query("call challengesIntesados(?)", data["idEstudiante"])
+
+		if err != nil {
+			json.NewEncoder(w).Encode(respuestaArreglo(0))
+		} else {
+			var lista = make([]Challenge, 0)
+			for results.Next() {
+				var nombre string
+				var url string
+				var info string
+				var categoria string
+				var tfavorite string
+				var date_inicio string
+				var code_challenges string 
+				// Guardar los campos en las variables
+				err = results.Scan(&nombre, &url, &info, &categoria, &tfavorite, &date_inicio, &code_challenges)
+				// Crear el struct y luego añadir al array
+				challenge := Challenge{Nombre: nombre, URL: url, Info: info,
+					Categoria: categoria, Tfavorite: tfavorite, Date_inicio: date_inicio, Code_challenges: code_challenges}
+				lista = append(lista, challenge)
+
+				if err != nil {
+					json.NewEncoder(w).Encode(respuestaArreglo(0))
+				}
+			}
+			fmt.Println(lista)
 			json.NewEncoder(w).Encode(lista)
 		}
 	}

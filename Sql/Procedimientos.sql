@@ -12,6 +12,7 @@ DROP PROCEDURE IF EXISTS gruposxChallenge;
 DROP PROCEDURE IF EXISTS MasEncanta;
 DROP PROCEDURE IF EXISTS EliminarGroup_student;
 DROP PROCEDURE IF EXISTS gruposEstudiante; 
+DROP PROCEDURE IF EXISTS challengesIntesados;
 
 -- COMENTADORES
 DROP PROCEDURE IF EXISTS MenosEncanta;
@@ -101,6 +102,17 @@ begin
 	select gc.groupname, gc.description, gc.url_whatsapp, gc.group_challenges_ID
 	from group_student gs, group_by_challenge gc 	 
 	where gs.student_ID = student_ID and gs.group_challenges_ID = gc.group_challenges_ID;    
+end;
+%% Delimiter ; 
+
+Delimiter %%
+create procedure challengesIntesados(in student_ID int)
+begin
+	-- View Challange con sus grupos y el Studiant
+	select name, url_img, info, category, Tfavorite, date_start, ch.code_challenges
+	from Challenge ch join Confirmation cnf on  ch.code_challenges=cnf.code_challenges
+    join Student st on cnf.student_ID=st.student_ID
+    where st.student_ID=student_ID;
 end;
 %% Delimiter ; 
 
