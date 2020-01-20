@@ -23,6 +23,7 @@ type Challenge struct {
 	Categoria   string `json:"categoria"`
 	Tfavorite   string `json:"meGustas"`
 	Date_inicio string `json:"fechaInicio"`
+	Code_challenges string `json:"code_challenges"`
 }
 
 type Grupos struct {
@@ -40,16 +41,13 @@ type Respuesta struct {
 // !!! user:password@tcp(127.0.0.1:3306)/database ¡¡¡
 
 // var configuracionMysql = "root:@tcp(127.0.0.1:3306)/groupchallenges"
-var configuracionMysql = "root:root@tcp(127.0.0.1:3306)/groupchallenges"
+var configuracionMysql = "root:@tcp(127.0.0.1:3306)/groupchallenges"
 
 // var ip = "192.168.200.11"
-var ip = "192.168.100.133"
+//var ip = "192.168.100.81"
 
 var puertoServidor = "9000"
-<<<<<<< HEAD
-=======
 var ip = "192.168.100.81"
->>>>>>> b985d69cbf78d90010ad3cb5ccde32ef421a81b2
 
 func main() {
 	// Ejecutar en consola:                    go run challengesServidor.go
@@ -105,11 +103,12 @@ func obtenerChallenges(w http.ResponseWriter, r *http.Request) {
 				var categoria string
 				var tfavorite string
 				var date_inicio string
+				var code_challenges string 
 				// Guardar los campos en las variables
-				err = resultados.Scan(&nombre, &url, &info, &categoria, &tfavorite, &date_inicio)
+				err = resultados.Scan(&nombre, &url, &info, &categoria, &tfavorite, &date_inicio, &code_challenges)
 				// Crear el struct y luego añadir al array
 				challenge := Challenge{Nombre: nombre, URL: url, Info: info,
-					Categoria: categoria, Tfavorite: tfavorite, Date_inicio: date_inicio}
+					Categoria: categoria, Tfavorite: tfavorite, Date_inicio: date_inicio, Code_challenges: code_challenges}
 				lista = append(lista, challenge)
 
 				if err != nil {

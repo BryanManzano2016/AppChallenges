@@ -11,7 +11,11 @@
         android:id="@+id/fragment_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@id/bottom_navigation">
+        android:layout_above="@id/bottom_navigation"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="-3dp"
+        android:layout_marginBottom="3dp">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/barSuperior"
@@ -114,81 +118,49 @@
             app:layout_constraintStart_toEndOf="@+id/barrabusqueda"
             app:layout_constraintTop_toTopOf="@+id/barrabusqueda"
             app:srcCompat="@drawable/lupabusqueda"
-            tools:ignore="MissingConstraints" />
+            tools:ignore="MissingConstraints" /><![CDATA[
+
+        >
 
 
-        <TableLayout
-            android:id="@+id/tableLayout"
-            android:layout_width="381dp"
-            android:layout_height="240dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginEnd="10dp"
-            android:isScrollContainer="true"
-            android:scrollbarStyle="insideInset"
+
+
+
+
+
+
+
+
+        ]]>
+
+        <ScrollView
+            android:id="@+id/root_layout"
+            android:layout_width="369dp"
+            android:layout_height="258dp"
+            android:layout_marginTop="244dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.515"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/barrabusqueda"
+            app:layout_constraintVertical_bias="1.0">
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/barrabusqueda">
-            android:scrollbarAlwaysDrawHorizontalTrack="false"
-
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/guideline8"
             app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toStartOf="@+id/guideline7"
-            app:layout_constraintTop_toBottomOf="@+id/barrabusqueda">
 
-
-            <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <ImageButton
-                    android:id="@+id/imageButton2"
-                    android:layout_width="178dp"
-                    android:layout_height="100dp"
-                    android:src="@android:drawable/star_big_on" />
-
-                <ImageButton
-                    android:id="@+id/imageButton3"
-                    android:layout_width="186dp"
-                    android:layout_height="match_parent"
-                    android:src="@android:drawable/star_big_on" />
-            </TableRow>
-
-            <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <ImageButton
-                    android:id="@+id/imageButton4"
-                    android:layout_width="154dp"
-                    android:layout_height="100dp"
-                    android:src="@android:drawable/ic_delete" />
-
-                <ImageButton
-                    android:id="@+id/imageButton5"
-                    android:layout_width="154dp"
-                    android:layout_height="match_parent"
-                    android:src="@android:drawable/ic_delete" />
-            </TableRow>
-
-            <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="54dp">
-
-                <ImageButton
-                    android:id="@+id/imageButton6"
-                    android:layout_width="178dp"
-                    android:layout_height="100dp"
-                    android:src="@android:drawable/checkbox_on_background" />
-
-                <ImageButton
-                    android:id="@+id/imageButton7"
-                    android:layout_width="178dp"
-                    android:layout_height="100dp"
-                    android:src="@android:drawable/checkbox_on_background" />
-            </TableRow>
-
-        </TableLayout>
+            <TableLayout
+                android:id="@+id/tableLayout"
+                android:layout_width="381dp"
+                android:layout_height="240dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="10dp"
+                android:isScrollContainer="true"
+                android:scrollbarStyle="insideInset"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/barrabusqueda" />
+        </ScrollView>
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline7"

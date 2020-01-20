@@ -64,11 +64,25 @@ class principal : AppCompatActivity() {
         challenge3.setOnClickListener {
 
             val intent = Intent(this, contr_grupoxchalenge::class.java)
-            var arregloEnviar = arrayOf("2")
+            var arregloEnviar = arrayOf("12")
             intent.putExtra("arreglo", arregloEnviar)
             startActivity(intent)
 
         }
+        Challenge1.setOnClickListener {
+            val intent = Intent(this, contr_grupoxchalenge::class.java)
+            var arregloEnviar = arrayOf("2")
+            intent.putExtra("arreglo", arregloEnviar)
+            startActivity(intent)
+        }
+
+        challenge5.setOnClickListener {
+            val intent = Intent(this, contr_grupoxchalenge::class.java)
+            var arregloEnviar = arrayOf("1")
+            intent.putExtra("arreglo", arregloEnviar)
+            startActivity(intent)
+        }
+
 
     }
 

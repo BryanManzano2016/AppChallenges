@@ -11,12 +11,8 @@ import kotlin.contracts.Returns
 
 class Auxiliar {
 
-<<<<<<< HEAD
-    // val direccion_ip= "http://192.168.200.11:9000/"
-    val direccion_ip= "http://192.168.100.133:9000/"
-=======
+
     val direccion_ip= "http://192.168.100.81:9000/"
->>>>>>> b985d69cbf78d90010ad3cb5ccde32ef421a81b2
 
     fun obtener_Ip(): String {
         return direccion_ip.toString()
@@ -64,7 +60,7 @@ class Auxiliar {
         return Challenge(
                 objeto.get("nombre").toString(), objeto.get("url").toString(), objeto.get("info").toString(),
                 objeto.get("categoria").toString(), objeto.get("meGustas").toString(),
-                objeto.get("fechaInicio").toString()
+                objeto.get("fechaInicio").toString(),objeto.get("code_challenges").toString()
         )
     }
 

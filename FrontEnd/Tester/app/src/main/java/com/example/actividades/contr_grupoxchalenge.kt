@@ -38,12 +38,14 @@ class contr_grupoxchalenge : AppCompatActivity() {
                 -1 -> {
                     lateinit var lViewgrupos: ListView
                     val nombresGrupos = LinkedList<Grupos>()
+                    val nombres=LinkedList<String>()
                     for (i in 0 until resultadoSolicitud.length()) {
                         nombresGrupos.add(Auxiliar().objetoGrupo(resultadoSolicitud.getJSONObject(i)))
                         println(resultadoSolicitud.getJSONObject(i).toString())
                     }
+                    nombresGrupos.forEach { nombres.add(it.grupoNombre) }
                     lViewgrupos= findViewById(R.id.lViewgrupos)
-                    val adaptador1= ArrayAdapter<Grupos>(this@contr_grupoxchalenge, R.menu.list_item_grupos, nombresGrupos)
+                    val adaptador1= ArrayAdapter<String>(this@contr_grupoxchalenge, R.menu.list_item_grupos, nombres)
                     lViewgrupos.adapter = adaptador1
                     lViewgrupos.setOnItemClickListener { adapterView, view, i, l ->
                         setContentView(R.layout.activity_pall_infogrupo)}
