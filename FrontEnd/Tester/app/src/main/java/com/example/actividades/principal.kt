@@ -27,8 +27,7 @@ class principal : AppCompatActivity() {
     private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item->
             when (item.itemId) {
         R.id.nav_home -> {
-            val intent = Intent(this, principal::class.java)
-            startActivity(intent)
+            //ya estas en home
             return@OnNavigationItemSelectedListener true }
         R.id.nav_favorites ->{
             val intent = Intent(this, tus_intereses::class.java)

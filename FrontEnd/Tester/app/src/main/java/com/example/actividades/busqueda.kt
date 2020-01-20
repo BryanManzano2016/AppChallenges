@@ -31,8 +31,7 @@ class busqueda : AppCompatActivity() {
                 startActivity(intent)
                 return@OnNavigationItemSelectedListener true }
             R.id.nav_search -> {
-                val intent = Intent(this, busqueda::class.java)
-                startActivity(intent)
+               //ya estas en la busqueda
                 return@OnNavigationItemSelectedListener true }
         }
         false

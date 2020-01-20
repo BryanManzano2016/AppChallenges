@@ -32,8 +32,7 @@ class tus_intereses : AppCompatActivity() {
                 startActivity(intent)
                 return@OnNavigationItemSelectedListener true }
             R.id.nav_favorites ->{
-                val intent = Intent(this, tus_intereses::class.java)
-                startActivity(intent)
+                //ya estas en interese
                 return@OnNavigationItemSelectedListener true }
             R.id.nav_search -> {
                 val intent = Intent(this,busqueda::class.java)
