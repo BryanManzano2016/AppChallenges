@@ -13,7 +13,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name="com.example.layout.info_challenge"></activity>
+        <activity android:name="com.example.layout.unidochallenge"></activity>
+        <activity android:name="com.example.layout.info_challenge" />
         <activity android:name=".tus_intereses" />
         <activity android:name=".busqueda" />
         <activity android:name=".principal">
