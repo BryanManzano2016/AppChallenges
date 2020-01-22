@@ -17,7 +17,6 @@ import kotlinx.coroutines.withContext
 import org.json.JSONArray
 import java.util.*
 import android.widget.LinearLayout
-import com.example.layout.info_challenge
 
 
 class busqueda : AppCompatActivity() {

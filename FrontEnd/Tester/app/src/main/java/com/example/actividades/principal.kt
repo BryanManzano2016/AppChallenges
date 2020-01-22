@@ -6,21 +6,11 @@ import androidx.fragment.app.Fragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.android.synthetic.main.activity_principal.*
 import com.example.clases.Auxiliar
-import com.squareup.picasso.Picasso
 import kotlinx.coroutines.*
 import org.json.JSONArray
 import java.util.*
-import androidx.core.app.ComponentActivity
-import androidx.core.content.ContextCompat.getSystemService
-import android.icu.lang.UCharacter.GraphemeClusterBreak.T
-import android.widget.ImageView
-import com.example.clases.Challenge
 import java.text.SimpleDateFormat
-import java.time.Month
-import kotlin.collections.HashMap
 import android.content.Intent
-import com.example.layout.info_challenge
-import com.example.layout.unidochallenge
 
 @Suppress("DEPRECATION")
 

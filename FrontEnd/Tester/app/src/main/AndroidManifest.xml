@@ -13,8 +13,15 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name="com.example.layout.unidochallenge"></activity>
-        <activity android:name="com.example.layout.info_challenge" />
+        <activity android:name=".formulario">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".unidochallenge" />
+        <activity android:name=".info_challenge" />
         <activity android:name=".tus_intereses" />
         <activity android:name=".busqueda" />
         <activity android:name=".principal">

@@ -2,9 +2,7 @@ package com.example.actividades
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import com.example.layout.info_challenge
 import kotlinx.android.synthetic.main.activity_pall_infogrupo.*
-import kotlinx.android.synthetic.main.activity_unidochallenge.*
 
 
 class controlador_pall_infogrupo : AppCompatActivity() {

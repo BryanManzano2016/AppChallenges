@@ -1,11 +1,8 @@
-package com.example.layout
+package com.example.actividades
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import com.example.actividades.R
-import com.example.actividades.contr_grupoxchalenge
-import kotlinx.android.synthetic.main.activity_principal.*
 import kotlinx.android.synthetic.main.activity_unidochallenge.*
 
 class unidochallenge : AppCompatActivity() {

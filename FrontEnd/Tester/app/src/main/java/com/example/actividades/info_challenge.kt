@@ -1,11 +1,9 @@
-package com.example.layout
+package com.example.actividades
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import com.example.actividades.R
 import kotlinx.android.synthetic.main.activity_info_challenge.*
-import kotlinx.android.synthetic.main.activity_principal.*
 
 class info_challenge : AppCompatActivity() {
 
