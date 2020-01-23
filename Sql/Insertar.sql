@@ -95,29 +95,29 @@ insert into Group_student values (13,8);
 
 #Challenge
 insert into Challenge values (default,"2019-12-15","2020-02-02",1,"Space Apps Challenge","Ciencia"
-,"https://2019.spaceappschallenge.org/lead","https://www.esa.int/var/esa/storage/images/esa_multimedia/images/2014/03/space_apps_challenge_logo/14334849-1-eng-GB/Space_Apps_Challenge_Logo_pillars.jpg",1823);
+,"https://2019.spaceappschallenge.org/lead","https://www.esa.int/var/esa/storage/images/esa_multimedia/images/2014/03/space_apps_challenge_logo/14334849-1-eng-GB/Space_Apps_Challenge_Logo_pillars.jpg");
 insert into Challenge values (default,"2019-12-08","2020-02-29",1,"BITEhack","Robotica","https://bitehack.best.krakow.pl/?",
- "https://challengerocket.com/photo_main_big/files/company/18/2019/12/cce810440a372030.jpg",2923);
+ "https://challengerocket.com/photo_main_big/files/company/18/2019/12/cce810440a372030.jpg");
 insert into Challenge values (default,"2020-01-01","2020-03-01",1,"Europa Commission","Ecología","https://ec.europa.eu/research/eic/index.cfm?"
-,"https://challengerocket.com/photo_main_big/content/konkursy/European-Commission-logo.png",823);
+,"https://challengerocket.com/photo_main_big/content/konkursy/European-Commission-logo.png");
 insert into Challenge values (default,"2019-11-08","2020-02-11",1,"Darpa","Desarrollo y Tecnologia","https://www.subtchallenge.com/?#icons",
-"https://challengerocket.com/photo_main_big/files/company/18/2019/08/a5ebf5fd4e85e544.jpg",523);
+"https://challengerocket.com/photo_main_big/files/company/18/2019/08/a5ebf5fd4e85e544.jpg");
 insert into Challenge values (default,"2020-01-08","2020-04-01",1,"ALZ germ","Ciencia","https://alzgerm.org/?"
-,"https://challengerocket.com/photo_main_big/content/konkursy/Alzgerm-logo.png",323);
+,"https://challengerocket.com/photo_main_big/content/konkursy/Alzgerm-logo.png");
 insert into Challenge values (default,"2019-11-08","2020-01-29",1,"Extreme Tech Challenge","Ciencia","https://extremetechchallenge.org/challenge?"
-,"https://challengerocket.com/photo_main_big/content/konk2rsy/the-extreme-tech-challenge.png",123);
+,"https://challengerocket.com/photo_main_big/content/konk2rsy/the-extreme-tech-challenge.png");
 insert into Challenge values (default,"2019-12-30","2020-03-08",1,"The Priority Health Innovation Challenge","Salud","https://www.cfhi-fcass.ca/WhatWeDo/challenges/priority-challenge?"
-,"https://challengerocket.com/photo_main_big/content/konkursy/priority-health-innovation-challenge.png",723);
+,"https://challengerocket.com/photo_main_big/content/konkursy/priority-health-innovation-challenge.png");
 insert into Challenge values (default,"2019-07-26","2019-11-09",1,"El Microfiction Challenge","Escritura","http://www.nycmidnight.com/Competitions/MFC/250/Challenge.htm"
-,"http://www.nycmidnight.com/Competitions/MFC/250/2013/250MFC2019_TopLogo07.png",1273);
+,"http://www.nycmidnight.com/Competitions/MFC/250/2013/250MFC2019_TopLogo07.png");
 insert into Challenge values (default,"2019-11-08","2020-02-11",1,"Hackathon Challenge Sostenible 2019","Desarrollo y Tecnologia"
-,"https://events.3ds.com/manufacturing-age-of-experience/hackathon-challenge-2019","https://www.3ds.com/statics/menu/2/assets/img/logo/3ds-dark.svg",1023);
+,"https://events.3ds.com/manufacturing-age-of-experience/hackathon-challenge-2019","https://www.3ds.com/statics/menu/2/assets/img/logo/3ds-dark.svg");
 insert into Challenge values (default,"2019-11-08","2020-02-11",1,"Código Maestro Cognitivo","Desarrollo y Tecnologia","https://www.hackerearth.com/challenges/test/cognizant-mastercode/"
-,"https://he-s3.s3.amazonaws.com/media/uploads/25beb4f.jpg",923);
+,"https://he-s3.s3.amazonaws.com/media/uploads/25beb4f.jpg");
 insert into Challenge values (default,"2019-05-08","2019-07-29",1,"Code Challenge Season","Desarrollo y Tecnologia","https://www.freelancer.in/contest/Code-challenge-poster-1145423-byentry-16648997"
-,"https://cdn2.f-cdn.com/contestentries/1145423/26732064/59d0b081e3ad3_thumb900.jpg",723);
+,"https://cdn2.f-cdn.com/contestentries/1145423/26732064/59d0b081e3ad3_thumb900.jpg");
 insert into Challenge values (default,"2019-12-15","2020-02-29",1,"Apple Apps for Earth","Desarrollo y Tecnologia","https://www.theverge.com/2016/4/14/11435648/apple-apps-for-earth-world-wildlife-fund-environmentalism"
-,"https://cdn.vox-cdn.com/thumbor/3lfyaJBuzcB0XLPkHTgPjN2VMj8=/128x0:674x364/920x613/filters:focal(128x0:674x364):format(webp)/cdn.vox-cdn.com/uploads/chorus_image/image/49318805/earth-day-app-store-screenshot.0.0.jpg",2003);
+,"https://cdn.vox-cdn.com/thumbor/3lfyaJBuzcB0XLPkHTgPjN2VMj8=/128x0:674x364/920x613/filters:focal(128x0:674x364):format(webp)/cdn.vox-cdn.com/uploads/chorus_image/image/49318805/earth-day-app-store-screenshot.0.0.jpg");
 
 #Group_Challenges
 insert into Group_Challenges values (1,1);
@@ -136,23 +136,23 @@ insert into Group_Challenges values (12,13);
 
 #Confirmation
 
-insert into Confirmation values (default,1,1,1,1);
-insert into Confirmation values (default,1,1,1,2);
-insert into Confirmation values (default,1,1,1,3);
-insert into Confirmation values (default,1,1,1,4);
-insert into Confirmation values (default,1,1,1,5);
-insert into Confirmation values (default,1,1,1,6);
-insert into Confirmation values (default,1,1,1,7);
-insert into Confirmation values (default,1,1,1,8);
+insert into Confirmation values (default,1,1,0,1);
+insert into Confirmation values (default,1,1,0,2);
+insert into Confirmation values (default,1,1,0,3);
+insert into Confirmation values (default,1,1,0,4);
+insert into Confirmation values (default,1,1,0,5);
+insert into Confirmation values (default,1,1,0,6);
+insert into Confirmation values (default,1,1,0,7);
+insert into Confirmation values (default,1,1,0,8);
 insert into Confirmation values (default,1,1,0,9);
-insert into Confirmation values (default,1,1,1,10);
-insert into Confirmation values (default,1,2,1,2);
-insert into Confirmation values (default,1,2,1,3);
-insert into Confirmation values (default,1,2,1,4);
-insert into Confirmation values (default,1,2,1,6);
-insert into Confirmation values (default,1,2,1,8);
-insert into Confirmation values (default,1,2,1,10);
-insert into Confirmation values (default,1,3,1,5);
+insert into Confirmation values (default,1,1,0,10);
+insert into Confirmation values (default,1,2,0,2);
+insert into Confirmation values (default,1,2,0,3);
+insert into Confirmation values (default,1,2,0,4);
+insert into Confirmation values (default,1,2,0,6);
+insert into Confirmation values (default,1,2,0,8);
+insert into Confirmation values (default,1,2,0,10);
+insert into Confirmation values (default,1,3,0,5);
 insert into Confirmation values (default,1,4,1,2);
 insert into Confirmation values (default,1,4,1,6);
 insert into Confirmation values (default,1,5,1,3);

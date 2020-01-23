@@ -1,38 +1,45 @@
 package com.example.actividades
 
+import android.content.Intent
 import android.os.Bundle
+import android.widget.ImageButton
+import android.widget.LinearLayout
+import android.widget.TableRow
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import com.google.android.material.bottomnavigation.BottomNavigationView
-import kotlinx.android.synthetic.main.activity_principal.*
 import com.example.clases.Auxiliar
-import kotlinx.coroutines.*
+import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.squareup.picasso.Picasso
+import kotlinx.android.synthetic.main.activity_principal.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.json.JSONArray
+import java.security.Principal
 import java.util.*
-import java.text.SimpleDateFormat
-import android.content.Intent
+
 
 @Suppress("DEPRECATION")
 
 class principal : AppCompatActivity() {
 
-    private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item->
-            when (item.itemId) {
-        R.id.nav_home -> {
-            //ya estas en home
-            return@OnNavigationItemSelectedListener true }
-        R.id.nav_favorites ->{
-            val intent = Intent(this, tus_intereses::class.java)
-            startActivity(intent)
-            return@OnNavigationItemSelectedListener true }
-        R.id.nav_search -> {
-            val intent = Intent(this, busqueda::class.java)
-            startActivity(intent)
-            return@OnNavigationItemSelectedListener true }
-        }
-        false 
-
-        }
+    private val mOnNavigationItemSelectedListener = BottomNavigationView
+            .OnNavigationItemSelectedListener { item->
+        when (item.itemId) {
+            R.id.nav_home -> {
+                return@OnNavigationItemSelectedListener true }
+            R.id.nav_favorites ->{
+                val intent = Intent(this, tus_intereses::class.java)
+                startActivity(intent)
+                return@OnNavigationItemSelectedListener true }
+            R.id.nav_search -> {
+                val intent = Intent(this, busqueda::class.java)
+                startActivity(intent)
+                return@OnNavigationItemSelectedListener true }
+            }
+        false
+    }
 
     private fun remplazarfragmento(fragment: Fragment){
         val fragmentTransition= supportFragmentManager.beginTransaction()
@@ -40,7 +47,6 @@ class principal : AppCompatActivity() {
         fragmentTransition.commit()
     }
     override fun onCreate(savedInstanceState: Bundle?) {
-
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_principal)
 
@@ -50,31 +56,21 @@ class principal : AppCompatActivity() {
         bottom_navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
     }
 
+    fun estaActividad(): principal {
+        return this
+    }
+
     fun inicializarEventos() {
-
-        challenge3.setOnClickListener {
-
-            val intent = Intent(this, info_challenge::class.java)
-            var arregloEnviar = arrayOf("12")
-            intent.putExtra("arreglo", arregloEnviar)
-            startActivity(intent)
-
+        /*
+        contenedoresImagenes().run { forEach( it.setOnClickListener {
+                    val intent = Intent(this, info_challenge::class.java)
+                    var arregloEnviar = arrayOf("12")
+                    intent.putExtra("arreglo", arregloEnviar)
+                    startActivity(intent)
+                }
+            )
         }
-        Challenge1.setOnClickListener {
-            val intent = Intent(this, info_challenge::class.java)
-            var arregloEnviar = arrayOf("2")
-            intent.putExtra("arreglo", arregloEnviar)
-            startActivity(intent)
-        }
-
-        challenge5.setOnClickListener {
-            val intent = Intent(this, info_challenge::class.java)
-            var arregloEnviar = arrayOf("1")
-            intent.putExtra("arreglo", arregloEnviar)
-            startActivity(intent)
-        }
-
-
+        */
     }
 
 
@@ -86,11 +82,8 @@ class principal : AppCompatActivity() {
 
 
     }
-    // OBTENER CHALLENGES
-
-
     private suspend fun CargarChallengesRecientes() {
-        val solicitud = obtenerChallenges()
+        val solicitud = obtenerChallengesRecientes()
         withContext(Dispatchers.Main) {
             when (Auxiliar().mensajeServidor(solicitud)) {
                 0 -> print("0")
@@ -100,16 +93,8 @@ class principal : AppCompatActivity() {
                     val nombres = LinkedList<String>()
                     for (i in 0 until solicitud.length()) {
                         listaChallenge.add(Auxiliar().objectoChallenge(solicitud.getJSONObject(i)))
-
-                    }
-                    listaChallenge.forEach {
-                        val sdf = SimpleDateFormat("yyyy-MM-dd")
-                        val strDate = sdf.parse(it.fechaInicio)
-                        val strCom = sdf.parse("2019-12-15")
-                        if (Date().after(strDate) and strCom.before(strDate)) {
-                            urls.add(it.url)
-                            nombres.add(it.nombre)
-                        }
+                        urls.add(listaChallenge.last.url)
+                        nombres.add(listaChallenge.last.nombre)
                     }
                     Auxiliar().colocarImagen(challenge2, urls.first, editText6, nombres.first)
                     Auxiliar().colocarImagen(challenge, urls.get(1), editText5, nombres.get(1))
@@ -119,37 +104,56 @@ class principal : AppCompatActivity() {
         }
     }
 
-
     private suspend fun CargarChallengesDestacados() {
-        val solicitud = obtenerChallenges()
+        val solicitud = obtenerChallengesDestacados()
+        val tableRow = TableRow(this)
+
         withContext(Dispatchers.Main) {
             when (Auxiliar().mensajeServidor(solicitud)) {
                 0 -> print("0")
                 -1 -> {
                     val listaChallenge = LinkedList<com.example.clases.Challenge>()
-                    val urls = LinkedList<String>()
-                    val nombres = LinkedList<String>()
                     for (i in 0 until solicitud.length()) {
                         listaChallenge.add(Auxiliar().objectoChallenge(solicitud.getJSONObject(i)))
-
+                        println(listaChallenge.last.toString())
                     }
+
+                    tablaDestacados.setColumnStretchable(1,true)
+
                     listaChallenge.forEach {
-                        urls.add(it.url)
-                        nombres.add(it.nombre)
+                        val img = ImageButton(this@principal)
+                        Picasso.get()
+                                .load(it.url)
+                                .resize(350, 250)
+                                .centerCrop()
+                                .into(img)
+                        tablaDestacados.addView(Auxiliar().retornarFilaTabla(img, estaActividad()))
+                        val arregloEnviar = arrayOf(it.code_challenges)
+                        img.setOnClickListener {
+                            val intent = Intent(this@principal, info_challenge::class.java)
+                            intent.putExtra("arreglo", arregloEnviar)
+                            startActivity(intent)
+                        }
                     }
-                    Auxiliar().colocarImagen(Challenge1, urls.first, editText, nombres.first)
-                    Auxiliar().colocarImagen(challenge3, urls.get(1), editText2, nombres.get(1))
-                    Auxiliar().colocarImagen(challenge5, urls.get(2), editText3, nombres.get(2))
-
                 }
             }
         }
     }
 
-    private suspend fun obtenerChallenges(): JSONArray {
+    private suspend fun obtenerChallengesDestacados(): JSONArray {
         return withContext(Dispatchers.Default) {
             val solicitud = Auxiliar().solicitudHttpGet(
-                    Auxiliar().obtener_Ip() + "obtenerChallenges"
+                    Auxiliar().obtener_Ip() + "obtenerChallengesDestacados"
+            )
+            val respuesta = Auxiliar().respuestaString(solicitud.body())
+            return@withContext JSONArray(respuesta)
+        }
+    }
+
+    private suspend fun obtenerChallengesRecientes(): JSONArray {
+        return withContext(Dispatchers.Default) {
+            val solicitud = Auxiliar().solicitudHttpGet(
+                    Auxiliar().obtener_Ip() + "obtenerChallengesRecientes"
             )
             val respuesta = Auxiliar().respuestaString(solicitud.body())
             return@withContext JSONArray(respuesta)

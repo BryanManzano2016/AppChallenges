@@ -2,6 +2,8 @@ use groupchallenges;
  
 -- BRYAN 
 DROP PROCEDURE IF EXISTS verChallenges;
+DROP PROCEDURE IF EXISTS verChallengesDestacados;
+DROP PROCEDURE IF EXISTS verChallengesRecientes;
 DROP PROCEDURE IF EXISTS challengesCategoria;
 DROP PROCEDURE IF EXISTS CreatorConfirmation;
 DROP PROCEDURE IF EXISTS CreatorGroup_student;
@@ -12,7 +14,7 @@ DROP PROCEDURE IF EXISTS gruposxChallenge;
 DROP PROCEDURE IF EXISTS MasEncanta;
 DROP PROCEDURE IF EXISTS EliminarGroup_student;
 DROP PROCEDURE IF EXISTS gruposEstudiante; 
-DROP PROCEDURE IF EXISTS challengesIntesados;
+DROP PROCEDURE IF EXISTS challengesInteresados;
 
 -- COMENTADORES
 DROP PROCEDURE IF EXISTS MenosEncanta;
@@ -31,14 +33,46 @@ DROP PROCEDURE IF EXISTS verfgrupovacio;
 Delimiter //
 create procedure verChallenges()
 	begin
-		select name, url_img, info, category, Tfavorite, date_start, code_challenges from challenge where status=1 order by Tfavorite DESC;
+		select ch.name, ch.url_img, ch.info, ch.category, sum(cf.favorite), ch.date_start, ch.code_challenges 
+        from challenge ch, confirmation cf
+        where status=1 and cf.code_challenges = ch.code_challenges
+        group by ch.code_challenges;
+	end //
+Delimiter ;
+		
+        
+Delimiter //
+create procedure verChallengesDestacados()
+	begin
+		select ch.name, ch.url_img, ch.info, ch.category, sum(cf.favorite), ch.date_start, ch.code_challenges 
+        from challenge ch, confirmation cf
+        where status=1 and cf.code_challenges = ch.code_challenges
+        group by ch.code_challenges
+        order by sum(cf.favorite) DESC
+        limit 3; 
 	end //
 Delimiter ;
 
 Delimiter //
-create procedure challengesCategoria( in categoria varchar(50) )
+create procedure verChallengesRecientes()
 	begin
-		select name, url_img, info, category, Tfavorite from challenge where status=1 order by Tfavorite DESC;
+		select ch.name, ch.url_img, ch.info, ch.category, sum(cf.favorite), ch.date_start, ch.code_challenges 
+        from challenge ch, confirmation cf
+        where status=1 and cf.code_challenges = ch.code_challenges
+        group by ch.code_challenges
+        order by date_start DESC
+        limit 3; 
+	end //
+Delimiter ;
+
+Delimiter //
+create procedure challengesCategoria( in category varchar(50) )
+	begin
+		select ch.name, ch.url_img, ch.info, ch.category, sum(cf.favorite), ch.date_start, ch.code_challenges 
+        from challenge ch, confirmation cf
+        where status=1 and cf.code_challenges = ch.code_challenges and 
+			ch.category = category
+        group by ch.code_challenges;
 	end //
 Delimiter ;
 
@@ -70,8 +104,6 @@ begin
 end;
 %% Delimiter ;
 
-
-
 -- Cargar GruposxChallenge
 Delimiter %%
 create procedure gruposxChallenge(in code_challenges int)
@@ -86,11 +118,16 @@ end
 
 -- aumentar me encanta
 Delimiter %%
-create procedure MasEncanta(in code_challenges int)
-begin	
-	update Challenge set Challenge.Tfavorite=Challenge.Tfavorite+1 
-		where Challenge.code_challenges=code_challenges  AND code_challenges <> 0;    
-	select 2;
+create procedure MasEncanta(in code_challenges int, in id_student int)
+begin	 	 
+    if not exists ( select 1 from Confirmation cnf where cnf.code_challenges = code_challenges and
+		cnf.student_ID = student_ID ) then			
+			select 2;
+	else 		
+		update confirmation cf set cf.favorite = cf.favorite*(-1) 
+			where cf.code_challenges = code_challenges  AND cf.student_ID = id_student;    		
+		select 1;
+    end if;	    
 end;
 %% Delimiter ;
 
@@ -106,13 +143,14 @@ end;
 %% Delimiter ; 
 
 Delimiter %%
-create procedure challengesIntesados(in student_ID int)
+create procedure challengesInteresados(in student_ID int)
 begin
 	-- View Challange con sus grupos y el Studiant
-	select name, url_img, info, category, Tfavorite, date_start, ch.code_challenges
-	from Challenge ch join Confirmation cnf on  ch.code_challenges=cnf.code_challenges
-    join Student st on cnf.student_ID=st.student_ID
-    where st.student_ID=student_ID;
+	select ch.name, ch.url_img, ch.info, ch.category, sum(cf.favorite), ch.date_start, ch.code_challenges 
+	from Challenge ch join Confirmation cf on  ch.code_challenges=cf.code_challenges
+    join Student st on cf.student_ID=st.student_ID
+    where st.student_ID=student_ID
+    group by ch.code_challenges;
 end;
 %% Delimiter ; 
 
@@ -143,16 +181,6 @@ begin
 end;
 %% Delimiter ;
 
--- disminuir me encanta
-Delimiter %%
-create procedure MenosEncanta(in code_challenges int)
-begin	
-	update Challenge set Challenge.Tfavorite=Challenge.Tfavorite-1 
-		where Challenge.code_challenges=code_challenges  AND code_challenges <> 0;    
-	select 1;
-end;
-%% Delimiter ;
-
 -- crear challenges
  Delimiter %%
 create procedure CreatorChallange(in name VARCHAR(60), in category varchar(30),in info  VARCHAR(160),in url_img VARCHAR(250))
@@ -166,12 +194,18 @@ begin
 		end if;	        
 end;
 %% Delimiter ;
-/* ------------------------------------------------------------------ */
-
-
-
-
+/* ------------------------------------------------------------------ */ 
 /*
+
+-- disminuir me encanta
+Delimiter %%
+create procedure MenosEncanta(in code_challenges int)
+begin	
+	update Challenge set Challenge.Tfavorite=Challenge.Tfavorite-1 
+		where Challenge.code_challenges=code_challenges  AND code_challenges <> 0;    
+	select 1;
+end;
+%% Delimiter ;
 
 -- disminuir me encanta
 Delimiter %%

@@ -17,12 +17,12 @@ import (
 */
 
 type Challenge struct {
-	Nombre      string `json:"nombre"`
-	URL         string `json:"url"`
-	Info        string `json:"info"`
-	Categoria   string `json:"categoria"`
-	Tfavorite   string `json:"meGustas"`
-	Date_inicio string `json:"fechaInicio"`
+	Nombre          string `json:"nombre"`
+	URL             string `json:"url"`
+	Info            string `json:"info"`
+	Categoria       string `json:"categoria"`
+	Tfavorite       string `json:"meGustas"`
+	Date_inicio     string `json:"fechaInicio"`
 	Code_challenges string `json:"code_challenges"`
 }
 
@@ -41,19 +41,22 @@ type Respuesta struct {
 // !!! user:password@tcp(127.0.0.1:3306)/database ¡¡¡
 
 // var configuracionMysql = "root:@tcp(127.0.0.1:3306)/groupchallenges"
-var configuracionMysql = "root:@tcp(127.0.0.1:3306)/groupchallenges"
+var configuracionMysql = "root:root@tcp(127.0.0.1:3306)/groupchallenges"
 
 // var ip = "192.168.200.11"
-//var ip = "192.168.100.81"
+// var ip = "192.168.100.81"
 
 var puertoServidor = "9000"
-var ip = "192.168.200.11"
+var ip = "192.168.100.133"
+var contador = 0
 
 func main() {
 	// Ejecutar en consola:                    go run challengesServidor.go
 	// Colocar en el navegador de esta forma:    http://localhost:9000/path
 	// http.HandleFunc("/path", funcionManejadora)
 	http.HandleFunc("/obtenerChallenges", obtenerChallenges)
+	http.HandleFunc("/obtenerChallengesDestacados", obtenerChallengesDestacados)
+	http.HandleFunc("/obtenerChallengesRecientes", obtenerChallengesRecientes)
 	http.HandleFunc("/obtenerChallengesCategoria", obtenerChallengesCategoria)
 	http.HandleFunc("/unirseChallenge", unirseChallenge)
 	http.HandleFunc("/unirseGrupo", unirseGrupo)
@@ -62,9 +65,9 @@ func main() {
 	http.HandleFunc("/gruposEstudiante", gruposEstudiante)
 	http.HandleFunc("/crearGrupo", crearGrupo)
 	http.HandleFunc("/eliminarGrupoChallenge", eliminarGrupoChallenge)
-	http.HandleFunc("/menosEncantaChallenge", menosEncantaChallenge)
+	// http.HandleFunc("/menosEncantaChallenge", menosEncantaChallenge)
 	http.HandleFunc("/crearChallenge", crearChallenge)
-	http.HandleFunc("/obtenerChallengesInteresados",obtenerChallengesInteresados)
+	http.HandleFunc("/obtenerChallengesInteresados", obtenerChallengesInteresados)
 
 	// En lugar de localhost puede ir la ip del servidor. Ademas es obligatorio desbloquear el puerto 9000
 	log.Fatal(http.ListenAndServe(ip+":"+puertoServidor, nil))
@@ -78,6 +81,8 @@ func respuestaArreglo(mensaje int) []Respuesta {
 }
 
 func obtenerChallenges(w http.ResponseWriter, r *http.Request) {
+
+	fmt.Println("obtenerChallenges")
 
 	db, err := sql.Open("mysql", configuracionMysql)
 
@@ -104,7 +109,103 @@ func obtenerChallenges(w http.ResponseWriter, r *http.Request) {
 				var categoria string
 				var tfavorite string
 				var date_inicio string
-				var code_challenges string 
+				var code_challenges string
+				// Guardar los campos en las variables
+				err = resultados.Scan(&nombre, &url, &info, &categoria, &tfavorite, &date_inicio, &code_challenges)
+				// Crear el struct y luego añadir al array
+				challenge := Challenge{Nombre: nombre, URL: url, Info: info,
+					Categoria: categoria, Tfavorite: tfavorite, Date_inicio: date_inicio, Code_challenges: code_challenges}
+				lista = append(lista, challenge)
+
+				if err != nil {
+					// Igualmente, como es error backend enviara 1 como respuesta
+					json.NewEncoder(w).Encode(respuestaArreglo(0))
+				}
+			}
+			// Codifica y responde al cliente de una vez
+			json.NewEncoder(w).Encode(lista)
+		}
+	}
+}
+
+func obtenerChallengesDestacados(w http.ResponseWriter, r *http.Request) {
+
+	fmt.Println("obtenerChallengesDestacados")
+
+	db, err := sql.Open("mysql", configuracionMysql)
+
+	if err != nil {
+		json.NewEncoder(w).Encode(respuestaArreglo(0))
+	} else {
+		defer db.Close()
+		// Usar stored procedure sin paramentros
+		resultados, err := db.Query("call verChallengesDestacados()")
+
+		if err != nil {
+			// Como es error backend enviara 1 como respuesta
+			json.NewEncoder(w).Encode(respuestaArreglo(0))
+		} else {
+
+			// Arreglo con 0 elementos
+			var lista = make([]Challenge, 0)
+			// Recorre el resultado de consulta
+			for resultados.Next() {
+
+				var nombre string
+				var url string
+				var info string
+				var categoria string
+				var tfavorite string
+				var date_inicio string
+				var code_challenges string
+				// Guardar los campos en las variables
+				err = resultados.Scan(&nombre, &url, &info, &categoria, &tfavorite, &date_inicio, &code_challenges)
+				// Crear el struct y luego añadir al array
+				challenge := Challenge{Nombre: nombre, URL: url, Info: info,
+					Categoria: categoria, Tfavorite: tfavorite, Date_inicio: date_inicio, Code_challenges: code_challenges}
+				lista = append(lista, challenge)
+
+				if err != nil {
+					// Igualmente, como es error backend enviara 1 como respuesta
+					json.NewEncoder(w).Encode(respuestaArreglo(0))
+				}
+			}
+			// Codifica y responde al cliente de una vez
+			json.NewEncoder(w).Encode(lista)
+		}
+	}
+}
+
+func obtenerChallengesRecientes(w http.ResponseWriter, r *http.Request) {
+
+	fmt.Println("obtenerChallengesRecientes")
+
+	db, err := sql.Open("mysql", configuracionMysql)
+
+	if err != nil {
+		json.NewEncoder(w).Encode(respuestaArreglo(0))
+	} else {
+		defer db.Close()
+		// Usar stored procedure sin paramentros
+		resultados, err := db.Query("call verChallengesRecientes()")
+
+		if err != nil {
+			// Como es error backend enviara 1 como respuesta
+			json.NewEncoder(w).Encode(respuestaArreglo(0))
+		} else {
+
+			// Arreglo con 0 elementos
+			var lista = make([]Challenge, 0)
+			// Recorre el resultado de consulta
+			for resultados.Next() {
+
+				var nombre string
+				var url string
+				var info string
+				var categoria string
+				var tfavorite string
+				var date_inicio string
+				var code_challenges string
 				// Guardar los campos en las variables
 				err = resultados.Scan(&nombre, &url, &info, &categoria, &tfavorite, &date_inicio, &code_challenges)
 				// Crear el struct y luego añadir al array
@@ -125,6 +226,8 @@ func obtenerChallenges(w http.ResponseWriter, r *http.Request) {
 
 // Dada una categoria se recuperan los challenges
 func obtenerChallengesCategoria(w http.ResponseWriter, r *http.Request) {
+
+	fmt.Println("obtenerChallengesCategoria")
 
 	jsonRecibido, err2 := ioutil.ReadAll(r.Body)
 	defer r.Body.Close()
@@ -177,6 +280,8 @@ func obtenerChallengesCategoria(w http.ResponseWriter, r *http.Request) {
 // Cuando cliente da click en unirse a challenge
 func unirseChallenge(w http.ResponseWriter, r *http.Request) {
 
+	fmt.Println("unirseChallenge")
+
 	jsonRecibido, err2 := ioutil.ReadAll(r.Body)
 	defer r.Body.Close()
 	db, err := sql.Open("mysql", configuracionMysql)
@@ -212,6 +317,8 @@ func unirseChallenge(w http.ResponseWriter, r *http.Request) {
 
 // Cuando cliente da click a unirse a grupo
 func unirseGrupo(w http.ResponseWriter, r *http.Request) {
+
+	fmt.Println("unirseGrupo")
 
 	jsonRecibido, err2 := ioutil.ReadAll(r.Body)
 	defer r.Body.Close()
@@ -252,6 +359,8 @@ func unirseGrupo(w http.ResponseWriter, r *http.Request) {
 
 func obtenerGruposChallenges(w http.ResponseWriter, r *http.Request) {
 
+	fmt.Println("obtenerGruposChallenges")
+
 	jsonRecibido, err2 := ioutil.ReadAll(r.Body)
 	defer r.Body.Close()
 	db, err := sql.Open("mysql", configuracionMysql)
@@ -263,8 +372,6 @@ func obtenerGruposChallenges(w http.ResponseWriter, r *http.Request) {
 		jsonData := []byte(jsonRecibido)
 		var data map[string]interface{}
 		json.Unmarshal([]byte(jsonData), &data)
-
-		fmt.Println(data)
 
 		results, err := db.Query("call gruposxChallenge(?)", data["idChallenge"])
 
@@ -293,6 +400,8 @@ func obtenerGruposChallenges(w http.ResponseWriter, r *http.Request) {
 
 func obtenerChallengesInteresados(w http.ResponseWriter, r *http.Request) {
 
+	fmt.Println("obtenerChallengesInteresados")
+
 	jsonRecibido, err2 := ioutil.ReadAll(r.Body)
 	defer r.Body.Close()
 	db, err := sql.Open("mysql", configuracionMysql)
@@ -305,9 +414,7 @@ func obtenerChallengesInteresados(w http.ResponseWriter, r *http.Request) {
 		var data map[string]interface{}
 		json.Unmarshal([]byte(jsonData), &data)
 
-		fmt.Println(data)
-
-		results, err := db.Query("call challengesIntesados(?)", data["idEstudiante"])
+		results, err := db.Query("call challengesInteresados(?)", data["idEstudiante"])
 
 		if err != nil {
 			json.NewEncoder(w).Encode(respuestaArreglo(0))
@@ -320,7 +427,7 @@ func obtenerChallengesInteresados(w http.ResponseWriter, r *http.Request) {
 				var categoria string
 				var tfavorite string
 				var date_inicio string
-				var code_challenges string 
+				var code_challenges string
 				// Guardar los campos en las variables
 				err = results.Scan(&nombre, &url, &info, &categoria, &tfavorite, &date_inicio, &code_challenges)
 				// Crear el struct y luego añadir al array
@@ -332,13 +439,14 @@ func obtenerChallengesInteresados(w http.ResponseWriter, r *http.Request) {
 					json.NewEncoder(w).Encode(respuestaArreglo(0))
 				}
 			}
-			fmt.Println(lista)
 			json.NewEncoder(w).Encode(lista)
 		}
 	}
 }
 
 func meEncantaChallenge(w http.ResponseWriter, r *http.Request) {
+
+	fmt.Println("meEncantaChallenge")
 
 	jsonRecibido, err2 := ioutil.ReadAll(r.Body)
 	defer r.Body.Close()
@@ -353,7 +461,7 @@ func meEncantaChallenge(w http.ResponseWriter, r *http.Request) {
 		var data map[string]interface{}
 		json.Unmarshal([]byte(jsonData), &data)
 
-		resultados, err := db.Query("call MasEncanta(?)", data["idChallenge"])
+		resultados, err := db.Query("call MasEncanta(?, ?)", data["idChallenge"], data["idEstudiante"])
 
 		if err != nil {
 			json.NewEncoder(w).Encode(respuestaArreglo(0))
@@ -374,6 +482,8 @@ func meEncantaChallenge(w http.ResponseWriter, r *http.Request) {
 }
 
 func gruposEstudiante(w http.ResponseWriter, r *http.Request) {
+
+	fmt.Println("gruposEstudiante")
 
 	jsonRecibido, err2 := ioutil.ReadAll(r.Body)
 	defer r.Body.Close()
@@ -417,6 +527,8 @@ func gruposEstudiante(w http.ResponseWriter, r *http.Request) {
 
 func crearGrupo(w http.ResponseWriter, r *http.Request) {
 
+	fmt.Println("crearGrupo")
+
 	jsonRecibido, err2 := ioutil.ReadAll(r.Body)
 	defer r.Body.Close()
 	db, err := sql.Open("mysql", configuracionMysql)
@@ -451,6 +563,8 @@ func crearGrupo(w http.ResponseWriter, r *http.Request) {
 
 func eliminarGrupoChallenge(w http.ResponseWriter, r *http.Request) {
 
+	fmt.Println("eliminarGrupoChallenge")
+
 	jsonRecibido, err2 := ioutil.ReadAll(r.Body)
 	defer r.Body.Close()
 	db, err := sql.Open("mysql", configuracionMysql)
@@ -484,41 +598,9 @@ func eliminarGrupoChallenge(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func menosEncantaChallenge(w http.ResponseWriter, r *http.Request) {
-
-	jsonRecibido, err2 := ioutil.ReadAll(r.Body)
-	defer r.Body.Close()
-	db, err := sql.Open("mysql", configuracionMysql)
-
-	if err != nil || err2 != nil {
-		json.NewEncoder(w).Encode(respuestaArreglo(0))
-	} else {
-		defer db.Close()
-
-		jsonData := []byte(jsonRecibido)
-		var data map[string]interface{}
-		json.Unmarshal([]byte(jsonData), &data)
-
-		results, err := db.Query("call MenosEncanta(?)", data["idChallenge"])
-
-		if err != nil {
-			json.NewEncoder(w).Encode(respuestaArreglo(0))
-		} else {
-			for results.Next() {
-				var respuesta int
-				err = results.Scan(&respuesta)
-				if err != nil {
-					json.NewEncoder(w).Encode(respuestaArreglo(0))
-				} else {
-					json.NewEncoder(w).Encode(respuestaArreglo(respuesta))
-				}
-				break
-			}
-		}
-	}
-}
-
 func crearChallenge(w http.ResponseWriter, r *http.Request) {
+
+	fmt.Println("crearChallenge")
 
 	jsonRecibido, err2 := ioutil.ReadAll(r.Body)
 	defer r.Body.Close()
@@ -552,3 +634,41 @@ func crearChallenge(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 }
+
+/*
+func menosEncantaChallenge(w http.ResponseWriter, r *http.Request) {
+
+	fmt.Println("menosEncantaChallenge")
+
+	jsonRecibido, err2 := ioutil.ReadAll(r.Body)
+	defer r.Body.Close()
+	db, err := sql.Open("mysql", configuracionMysql)
+
+	if err != nil || err2 != nil {
+		json.NewEncoder(w).Encode(respuestaArreglo(0))
+	} else {
+		defer db.Close()
+
+		jsonData := []byte(jsonRecibido)
+		var data map[string]interface{}
+		json.Unmarshal([]byte(jsonData), &data)
+
+		results, err := db.Query("call MenosEncanta(?)", data["idChallenge"])
+
+		if err != nil {
+			json.NewEncoder(w).Encode(respuestaArreglo(0))
+		} else {
+			for results.Next() {
+				var respuesta int
+				err = results.Scan(&respuesta)
+				if err != nil {
+					json.NewEncoder(w).Encode(respuestaArreglo(0))
+				} else {
+					json.NewEncoder(w).Encode(respuestaArreglo(respuesta))
+				}
+				break
+			}
+		}
+	}
+}
+*/

@@ -1,7 +1,7 @@
 package com.example.clases
 
-import android.widget.ImageView
-import android.widget.TextView
+import android.widget.*
+import androidx.appcompat.app.AppCompatActivity
 import com.squareup.okhttp.*
 import com.squareup.picasso.Picasso
 import org.json.JSONArray
@@ -11,8 +11,8 @@ import kotlin.contracts.Returns
 
 class Auxiliar {
 
-
-    val direccion_ip= "http://192.168.200.11:9000/"
+    val direccion_ip= "http://192.168.100.133:9000/"
+    // val direccion_ip= "http://192.168.200.11:9000/"
 
     fun obtener_Ip(): String {
         return direccion_ip.toString()
@@ -78,7 +78,14 @@ class Auxiliar {
                 .centerCrop()
                 .into(imagen)
         texto.text=nombre
+    }
 
+    fun retornarFilaTabla(imagen: ImageButton, app: AppCompatActivity): TableRow{
+        val elemento = TableRow(app)
+        elemento.layoutParams = LinearLayout.LayoutParams( LinearLayout.LayoutParams.MATCH_PARENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT)
+        elemento.addView(imagen)
+        return elemento
     }
 
 

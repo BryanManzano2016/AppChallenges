@@ -50,8 +50,7 @@ CREATE TABLE IF NOT EXISTS Challenge(
 	name VARCHAR(60),
 	category VARCHAR(30),
 	info  VARCHAR(160),
-	url_img VARCHAR(250),
-	Tfavorite INT
+	url_img VARCHAR(250)
 );
 
 CREATE TABLE IF NOT EXISTS Group_Challenges(

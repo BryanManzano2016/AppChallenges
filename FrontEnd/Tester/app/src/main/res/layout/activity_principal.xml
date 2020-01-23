@@ -68,36 +68,6 @@
             app:layout_constraintTop_toBottomOf="@+id/challenge2"
             app:layout_constraintVertical_bias="0.571" />
 
-        <TextView
-            android:id="@+id/editText3"
-            android:layout_width="100dp"
-            android:layout_height="60dp"
-            android:layout_marginStart="12dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="32dp"
-            android:ems="10"
-            android:inputType="textPersonName"
-            android:text="Challenge3"
-            android:textStyle="bold|italic"
-            android:typeface="monospace"
-            app:layout_constraintBottom_toBottomOf="@+id/editText2"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/editText2"
-            app:layout_constraintTop_toTopOf="@+id/editText2"
-            app:layout_constraintVertical_bias="0.785" />
-
-        <ImageButton
-            android:id="@+id/challenge3"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_marginTop="36dp"
-            android:background="#39FFFFFF"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.511"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/guideline2"
-            app:srcCompat="@mipmap/ic_launcher_round" />
-
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/barSuperior2"
             android:layout_width="0dp"
@@ -109,7 +79,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/guideline3"
+            app:layout_constraintTop_toBottomOf="@+id/tablaDestacados"
             app:layout_constraintVertical_bias="0.0"
             tools:ignore="MissingConstraints" />
 
@@ -124,19 +94,6 @@
             app:layout_constraintHorizontal_bias="0.593"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/challenge2"
-            app:layout_constraintVertical_bias="1.0"
-            app:srcCompat="@mipmap/ic_launcher_round" />
-
-        <ImageButton
-            android:id="@+id/challenge5"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:background="#2FFFFFFF"
-            app:layout_constraintBottom_toBottomOf="@+id/challenge3"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.428"
-            app:layout_constraintStart_toEndOf="@+id/challenge3"
-            app:layout_constraintTop_toTopOf="@+id/challenge3"
             app:layout_constraintVertical_bias="1.0"
             app:srcCompat="@mipmap/ic_launcher_round" />
 
@@ -177,20 +134,6 @@
             tools:ignore="MissingConstraints" />
 
         <ImageButton
-            android:id="@+id/Challenge1"
-            style="@android:style/Widget.Holo.Light.ImageButton"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:background="#19FFFFFF"
-            app:layout_constraintBottom_toBottomOf="@+id/challenge3"
-            app:layout_constraintEnd_toStartOf="@+id/challenge3"
-            app:layout_constraintHorizontal_bias="0.654"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/challenge3"
-            app:layout_constraintVertical_bias="0.0"
-            app:srcCompat="@mipmap/ic_launcher_round" />
-
-        <ImageButton
             android:id="@+id/challenge2"
             android:layout_width="100dp"
             android:layout_height="100dp"
@@ -215,47 +158,12 @@
             app:layout_constraintVertical_bias="1.0"
             app:srcCompat="@mipmap/ic_launcher_round" />
 
-        <TextView
-            android:id="@+id/editText"
-            android:layout_width="99dp"
-            android:layout_height="60dp"
-            android:layout_marginStart="40dp"
-            android:layout_marginEnd="12dp"
-            android:ems="10"
-            android:inputType="textPersonName"
-            android:text="Challenge1"
-            android:textStyle="bold|italic"
-            android:typeface="monospace"
-            app:layout_constraintBottom_toBottomOf="@+id/editText2"
-            app:layout_constraintEnd_toStartOf="@+id/editText2"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/editText2"
-            app:layout_constraintVertical_bias="0.0" />
-
-        <TextView
-            android:id="@+id/editText2"
-            android:layout_width="100dp"
-            android:layout_height="60dp"
-            android:layout_marginStart="12dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="12dp"
-            android:ems="10"
-            android:inputType="textPersonName"
-            android:text="Challenge2"
-            android:textStyle="bold|italic"
-            android:typeface="monospace"
-            app:layout_constraintBottom_toTopOf="@+id/guideline3"
-            app:layout_constraintEnd_toStartOf="@+id/editText3"
-            app:layout_constraintStart_toEndOf="@+id/editText"
-            app:layout_constraintTop_toBottomOf="@+id/challenge3"
-            app:layout_constraintVertical_bias="0.238" />
-
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            app:layout_constraintGuide_percent="0.09286899" />
+            app:layout_constraintGuide_percent="0.09" />
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline3"
@@ -289,6 +197,35 @@
             app:layout_constraintStart_toStartOf="@+id/barSuperior2"
             app:layout_constraintTop_toTopOf="@+id/barSuperior2"
             app:layout_constraintVertical_bias="0.384" />
+
+        <TableLayout
+            android:id="@+id/tablaDestacados"
+            android:layout_width="370dp"
+            android:layout_height="200dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginEnd="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.444"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/barSuperior">
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </TableLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

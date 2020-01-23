@@ -5,13 +5,13 @@ import android.os.Bundle
 import kotlinx.android.synthetic.main.activity_pall_infogrupo.*
 
 
-class controlador_pall_infogrupo : AppCompatActivity() {
+class
+controlador_pall_infogrupo : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_pall_infogrupo)
         ir()
-
     }
 
     fun ir(){
