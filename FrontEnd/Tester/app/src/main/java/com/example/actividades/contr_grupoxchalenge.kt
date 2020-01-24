@@ -1,18 +1,23 @@
 package com.example.actividades
+import android.icu.lang.UCharacter.GraphemeClusterBreak.T
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.widget.ArrayAdapter
+import android.widget.EditText
 import android.widget.ListView
 import com.example.clases.Auxiliar
 import com.example.clases.Challenge
 import com.example.clases.Grupos
+import kotlinx.android.synthetic.main.activity_grupoxchallenge.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.json.JSONArray
-import java.sql.SQLOutput
 import java.util.*
+
 
 
 class contr_grupoxchalenge : AppCompatActivity() {
@@ -28,6 +33,12 @@ class contr_grupoxchalenge : AppCompatActivity() {
 
     fun iniciarComponentesUI(id: Int){
         GlobalScope.launch { obtenerGruposChallengesCt(id) }
+        botonagregar2.setOnClickListener {
+            val arregloEnviar = arrayOf("2")
+            val intent = android.content.Intent(this, formulario::class.java)
+            intent.putExtra("arreglo", arregloEnviar)
+            startActivity(intent)
+        }
     }
 
     private suspend fun obtenerGruposChallengesCt(cat : Int) {
@@ -45,10 +56,18 @@ class contr_grupoxchalenge : AppCompatActivity() {
                     }
                     nombresGrupos.forEach { nombres.add(it.grupoNombre) }
                     lViewgrupos= findViewById(R.id.lViewgrupos)
-                    val adaptador1= ArrayAdapter<String>(this@contr_grupoxchalenge, R.menu.list_item_grupos, nombres)
+                    var adaptador1= ArrayAdapter<String>(this@contr_grupoxchalenge, R.menu.list_item_grupos, nombres)
                     lViewgrupos.adapter = adaptador1
                     lViewgrupos.setOnItemClickListener { adapterView, view, i, l ->
                         setContentView(R.layout.activity_pall_infogrupo)}
+                    barrabusqueda.addTextChangedListener( object : TextWatcher {
+                        override fun afterTextChanged(s: Editable) {}
+                        override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
+                        override fun onTextChanged(s: CharSequence, start: Int,
+                                                   before: Int, count: Int) {
+                            adaptador1.filter.filter(s)
+                        }
+                    })
                 }
             }
         }
@@ -64,4 +83,5 @@ class contr_grupoxchalenge : AppCompatActivity() {
         }
 
     }
+
 }

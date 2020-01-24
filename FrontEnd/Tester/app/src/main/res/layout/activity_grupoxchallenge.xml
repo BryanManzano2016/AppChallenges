@@ -79,7 +79,7 @@
         tools:ignore="MissingConstraints" />
 
     <ImageView
-        android:id="@+id/botonagregar"
+        android:id="@+id/botonagregar2"
         android:layout_width="48dp"
         android:layout_height="49dp"
         android:layout_marginStart="10dp"
@@ -96,7 +96,7 @@
         app:srcCompat="@drawable/addgrupo"
         tools:ignore="MissingConstraints" />
 
-    <SearchView
+    <EditText
         android:id="@+id/barrabusqueda"
         android:layout_width="0dp"
         android:layout_height="49dp"
