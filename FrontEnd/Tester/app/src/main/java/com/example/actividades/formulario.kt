@@ -9,4 +9,5 @@ class formulario : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_formulario)
     }
+
 }
