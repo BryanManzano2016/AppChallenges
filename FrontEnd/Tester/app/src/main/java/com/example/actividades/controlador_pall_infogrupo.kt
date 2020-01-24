@@ -15,7 +15,7 @@ controlador_pall_infogrupo : AppCompatActivity() {
     }
 
     fun ir(){
-        botonagregar.setOnClickListener {
+        botonagregar1.setOnClickListener {
             val intent = Intent(this, controlador_pall_infogrupo2::class.java)
             var arregloEnviar = arrayOf("2")
             intent.putExtra("arreglo", arregloEnviar)

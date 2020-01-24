@@ -15,6 +15,8 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.json.JSONArray
+import org.json.JSONObject
+import java.sql.SQLOutput
 import java.util.*
 
 
@@ -26,6 +28,7 @@ class principal : AppCompatActivity() {
     private var imagenesDestacados = LinkedList<ImageButton>()
     private var textosCR = LinkedList<TextView>()
     private var textosCD = LinkedList<TextView>()
+    private var challengeSeleccionado = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -111,10 +114,11 @@ class principal : AppCompatActivity() {
                         Auxiliar().colocarImagen(imagenesRecientes[i], challenge.url,
                                 textosCR[i], challenge.nombre)
                         imagenesRecientes[i].setOnClickListener {
-                            val intent = Intent(estaActividad(), info_challenge::class.java)
-                            var arregloEnviar = arrayOf(textosCR[i].text)
-                            intent.putExtra("arreglo", arregloEnviar)
-                            startActivity(intent)
+                            challengeSeleccionado = challenge.code_challenges
+                            GlobalScope.launch {
+                                verificarSubscripcionChallege(challenge.code_challenges.toInt(),
+                                        getString(R.string.idEstudiante).toInt())
+                            }
                         }
                     }
                 }
@@ -133,10 +137,11 @@ class principal : AppCompatActivity() {
                         Auxiliar().colocarImagen(imagenesDestacados[i], challenge.url,
                                 textosCD[i], challenge.nombre)
                         imagenesDestacados[i].setOnClickListener {
-                            val intent = Intent(estaActividad(), info_challenge::class.java)
-                            var arregloEnviar = arrayOf(textosCD[i].text)
-                            intent.putExtra("arreglo", arregloEnviar)
-                            startActivity(intent)
+                            challengeSeleccionado = challenge.code_challenges
+                            GlobalScope.launch {
+                                verificarSubscripcionChallege(challenge.code_challenges.toInt(),
+                                        getString(R.string.idEstudiante).toInt())
+                            }
                         }
                     }
                 }
@@ -163,6 +168,37 @@ class principal : AppCompatActivity() {
             return@withContext JSONArray(respuesta)
         }
     }
+
+    private suspend fun verificarSubscripcionChallege(idChallenge: Int, idEstudiante: Int){
+        val solicitud = subscripcionChallege(idChallenge, idEstudiante)
+        withContext(Dispatchers.Main) {
+            val arregloEnviar = arrayOf(challengeSeleccionado)
+            when (Auxiliar().mensajeServidor(solicitud)) {
+                0 -> print("Servidor caido")
+                1 -> {
+                    val intent = Intent(estaActividad(), unidochallenge::class.java)
+                    intent.putExtra("arreglo", arregloEnviar)
+                    startActivity(intent)
+                }
+                2 -> {
+                    val intent = Intent(estaActividad(), info_challenge::class.java)
+                    intent.putExtra("arreglo", arregloEnviar)
+                    startActivity(intent)
+                }
+            }
+        }
+    }
+
+    private suspend fun subscripcionChallege(idChallenge: Int, idEstudiante: Int): JSONArray {
+        return withContext(Dispatchers.Default) {
+            val solicitud = Auxiliar().solicitudHttpPost(
+                    Auxiliar().obtener_Ip() + "estaInscritoChallenge",
+                    "{\"idChallenge\":$idChallenge, \"idEstudiante\": $idEstudiante}")
+            return@withContext JSONArray(Auxiliar().respuestaString(solicitud.body()))
+        }
+    }
+
+
 
     // OBTENER CHALLENGES POR CATEGORIA
     private suspend fun obtenerChallengesCategoriaCt(cat : String) {

@@ -11,6 +11,7 @@ import kotlin.contracts.Returns
 
 class Auxiliar {
 
+
  //   val direccion_ip= "http://192.168.100.133:9000/"
      val direccion_ip= "http://192.168.200.11:9000/"
 

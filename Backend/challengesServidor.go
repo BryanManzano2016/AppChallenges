@@ -47,7 +47,11 @@ var configuracionMysql = "root:@tcp(127.0.0.1:3306)/groupchallenges"
 // var ip = "192.168.100.81"
 
 var puertoServidor = "9000"
+<<<<<<< HEAD
 var ip = "192.168.200.11"
+=======
+var ip = "192.168.100.81"
+>>>>>>> efd3be86136fd318309c9413a8fbd00b5e0f279c
 var contador = 0
 
 func main() {
@@ -68,7 +72,7 @@ func main() {
 	// http.HandleFunc("/menosEncantaChallenge", menosEncantaChallenge)
 	http.HandleFunc("/crearChallenge", crearChallenge)
 	http.HandleFunc("/obtenerChallengesInteresados", obtenerChallengesInteresados)
-
+	http.HandleFunc("/estaInscritoChallenge", estaInscritoChallenge)
 	// En lugar de localhost puede ir la ip del servidor. Ademas es obligatorio desbloquear el puerto 9000
 	log.Fatal(http.ListenAndServe(ip+":"+puertoServidor, nil))
 }
@@ -635,10 +639,9 @@ func crearChallenge(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-/*
-func menosEncantaChallenge(w http.ResponseWriter, r *http.Request) {
+func estaInscritoChallenge(w http.ResponseWriter, r *http.Request) {
 
-	fmt.Println("menosEncantaChallenge")
+	fmt.Println("estaInscritoChallenge")
 
 	jsonRecibido, err2 := ioutil.ReadAll(r.Body)
 	defer r.Body.Close()
@@ -653,15 +656,18 @@ func menosEncantaChallenge(w http.ResponseWriter, r *http.Request) {
 		var data map[string]interface{}
 		json.Unmarshal([]byte(jsonData), &data)
 
-		results, err := db.Query("call MenosEncanta(?)", data["idChallenge"])
+		fmt.Println(data)
+		results1, err1 := db.Query("call estaInscritoChallenge(?,?)", data["idChallenge"], data["idEstudiante"])
 
 		if err != nil {
 			json.NewEncoder(w).Encode(respuestaArreglo(0))
 		} else {
-			for results.Next() {
+			for results1.Next() {
 				var respuesta int
-				err = results.Scan(&respuesta)
-				if err != nil {
+				err1 = results1.Scan(&respuesta)
+
+				fmt.Println(respuesta)
+				if err1 != nil {
 					json.NewEncoder(w).Encode(respuestaArreglo(0))
 				} else {
 					json.NewEncoder(w).Encode(respuestaArreglo(respuesta))
@@ -671,4 +677,3 @@ func menosEncantaChallenge(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 }
-*/

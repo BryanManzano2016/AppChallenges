@@ -3,6 +3,9 @@ package com.example.actividades
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
+import android.widget.CheckBox
 import android.widget.ImageButton
 import com.example.clases.Auxiliar
 import com.example.clases.Challenge
@@ -17,9 +20,11 @@ import kotlinx.coroutines.withContext
 import org.json.JSONArray
 import java.util.*
 import android.widget.LinearLayout
+import androidx.core.view.children
 
 
 class busqueda : AppCompatActivity() {
+    var listaCheckBox=LinkedList<CheckBox>()
     private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item->
         when (item.itemId) {
             R.id.nav_home -> {
@@ -49,6 +54,7 @@ class busqueda : AppCompatActivity() {
         GlobalScope.launch {
             CargarChallengesBusquedaCt()
         }
+        inicializarCheckBox()
     }
 
 
@@ -69,6 +75,8 @@ class busqueda : AppCompatActivity() {
                     listaBusqueda.forEach {
                         val img= ImageButton(this@busqueda)
                         val lineal= LinearLayout(this@busqueda)
+                        lineal.setHorizontalGravity(2)
+                        lineal.setVerticalGravity(10)
                         Picasso.get()
                                 .load(it.url)
                                 .resize(250, 150)
@@ -82,8 +90,8 @@ class busqueda : AppCompatActivity() {
 
                             intent.putExtra("arreglo", arregloEnviar)
                             startActivity(intent)
-
                         }
+
                         }
 
                     }
@@ -92,6 +100,28 @@ class busqueda : AppCompatActivity() {
             }
         }
 
+
+
+
+
+    // OBTENER CHALLENGES POR CATEGORIA
+    private suspend fun obtenerChallengesCategoriaCt(cat : String) {
+        val resultadoSolicitud = obtenerChallengesCategoria(cat)
+        withContext(Dispatchers.Main) {
+            when (Auxiliar().mensajeServidor(resultadoSolicitud)) {
+                0 -> print("0")
+                -1 -> {
+                    val listaChallenge = LinkedList<com.example.clases.Challenge>()
+                    for (i in 0 until resultadoSolicitud.length()) {
+                        listaChallenge.add(Auxiliar().objectoChallenge(resultadoSolicitud.getJSONObject(i)))
+                    }
+                    var cadena = ""
+                    listaChallenge.forEach { cadena += it.nombre + "\n" }
+                    print(cadena)
+                }
+            }
+        }
+    }
 
     private suspend fun obtenerChallengesBusqueda(): JSONArray {
         return withContext(Dispatchers.Default) {
@@ -103,5 +133,34 @@ class busqueda : AppCompatActivity() {
             val respuesta = Auxiliar().respuestaString(solicitud.body())
             return@withContext JSONArray(respuesta)
         }
+    }
+
+    private suspend fun obtenerChallengesCategoria(cat:String ): JSONArray {
+        return withContext(Dispatchers.Default) {
+            val solicitud = Auxiliar().solicitudHttpPost(
+                    Auxiliar().obtener_Ip() + "obtenerChallengesCategoria",
+                    "{\"categoria\":\""+cat+"\"\"}")
+            return@withContext JSONArray(Auxiliar().respuestaString(solicitud.body()))
+        }
+    }
+
+ fun inicializarCheckBox(){
+     checkBoxA.text="Ciencia"
+     checkBoxB.text="Desarrollo y Tecnologia"
+     checkBoxC.text="Ecología"
+     checkBoxD.text="Escritura"
+     checkBoxE.text="Robotica"
+     checkBoxF.text="Salud"
+    // Unicamente existe 6 categorias por defecto, el administrador es el encargado de unir categorias si es que lo hay
+     listaCheckBox.add(checkBoxA)
+     listaCheckBox.add(checkBoxB)
+     listaCheckBox.add(checkBoxC)
+     listaCheckBox.add(checkBoxD)
+     listaCheckBox.add(checkBoxE)
+     listaCheckBox.add(checkBoxF)
+ }
+    fun colgarCheckBox(a: CheckBox,b: CheckBox,c: CheckBox,d: CheckBox, e: CheckBox, f: CheckBox){
+
+
     }
 }
