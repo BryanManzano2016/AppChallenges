@@ -1,5 +1,5 @@
 use groupchallenges;
- 
+
 -- BRYAN 
 DROP PROCEDURE IF EXISTS verChallenges;
 DROP PROCEDURE IF EXISTS verChallengesDestacados;

@@ -79,7 +79,7 @@ class Auxiliar {
                 .into(imagen)
         texto.text=nombre
     }
-
+    /*
     fun retornarFilaTabla(imagen: ImageButton, app: AppCompatActivity): TableRow{
         val elemento = TableRow(app)
         elemento.layoutParams = LinearLayout.LayoutParams( LinearLayout.LayoutParams.MATCH_PARENT,
@@ -87,6 +87,6 @@ class Auxiliar {
         elemento.addView(imagen)
         return elemento
     }
-
+    */
 
 }

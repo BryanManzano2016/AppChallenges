@@ -3,26 +3,39 @@ package com.example.actividades
 import android.content.Intent
 import android.os.Bundle
 import android.widget.ImageButton
-import android.widget.LinearLayout
-import android.widget.TableRow
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.example.clases.Auxiliar
+import com.example.clases.Challenge
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_principal.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.json.JSONArray
-import java.security.Principal
 import java.util.*
 
 
 @Suppress("DEPRECATION")
 
 class principal : AppCompatActivity() {
+
+    private var imagenesRecientes = LinkedList<ImageButton>()
+    private var imagenesDestacados = LinkedList<ImageButton>()
+    private var textosCR = LinkedList<TextView>()
+    private var textosCD = LinkedList<TextView>()
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_principal)
+
+        inicializarComponentesGUI()
+        inicializarEventos()
+
+        bottom_navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
+    }
 
     private val mOnNavigationItemSelectedListener = BottomNavigationView
             .OnNavigationItemSelectedListener { item->
@@ -41,23 +54,14 @@ class principal : AppCompatActivity() {
         false
     }
 
+    fun estaActividad(): principal {
+        return this
+    }
+
     private fun remplazarfragmento(fragment: Fragment){
         val fragmentTransition= supportFragmentManager.beginTransaction()
         fragmentTransition.replace(R.id.fragmentoContenedor,fragment)
         fragmentTransition.commit()
-    }
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_principal)
-
-        inicializarComponentesGUI()
-        inicializarEventos()
-
-        bottom_navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
-    }
-
-    fun estaActividad(): principal {
-        return this
     }
 
     fun inicializarEventos() {
@@ -75,30 +79,44 @@ class principal : AppCompatActivity() {
 
 
     fun inicializarComponentesGUI() {
+        imagenesDestacados.clear()
+        imagenesRecientes.clear()
+        textosCR.clear()
+        imagenesDestacados.add(challenge1)
+        imagenesDestacados.add(challenge2)
+        imagenesDestacados.add(challenge3)
+        imagenesRecientes.add(challenge4)
+        imagenesRecientes.add(challenge5)
+        imagenesRecientes.add(challenge6)
+        textosCD.add(textC1)
+        textosCD.add(textC2)
+        textosCD.add(textC3)
+        textosCR.add(textC4)
+        textosCR.add(textC5)
+        textosCR.add(textC6)
         GlobalScope.launch {
             CargarChallengesDestacados()
             CargarChallengesRecientes()
         }
-
-
     }
+
     private suspend fun CargarChallengesRecientes() {
         val solicitud = obtenerChallengesRecientes()
         withContext(Dispatchers.Main) {
             when (Auxiliar().mensajeServidor(solicitud)) {
                 0 -> print("0")
                 -1 -> {
-                    val listaChallenge = LinkedList<com.example.clases.Challenge>()
-                    val urls = LinkedList<String>()
-                    val nombres = LinkedList<String>()
                     for (i in 0 until solicitud.length()) {
-                        listaChallenge.add(Auxiliar().objectoChallenge(solicitud.getJSONObject(i)))
-                        urls.add(listaChallenge.last.url)
-                        nombres.add(listaChallenge.last.nombre)
+                        val challenge = Auxiliar().objectoChallenge(solicitud.getJSONObject(i))
+                        Auxiliar().colocarImagen(imagenesRecientes[i], challenge.url,
+                                textosCR[i], challenge.nombre)
+                        imagenesRecientes[i].setOnClickListener {
+                            val intent = Intent(estaActividad(), info_challenge::class.java)
+                            var arregloEnviar = arrayOf(textosCR[i].text)
+                            intent.putExtra("arreglo", arregloEnviar)
+                            startActivity(intent)
+                        }
                     }
-                    Auxiliar().colocarImagen(challenge2, urls.first, editText6, nombres.first)
-                    Auxiliar().colocarImagen(challenge, urls.get(1), editText5, nombres.get(1))
-                    Auxiliar().colocarImagen(challenge4, urls.get(2), editText4, nombres.get(2))
                 }
             }
         }
@@ -106,31 +124,17 @@ class principal : AppCompatActivity() {
 
     private suspend fun CargarChallengesDestacados() {
         val solicitud = obtenerChallengesDestacados()
-        val tableRow = TableRow(this)
-
         withContext(Dispatchers.Main) {
             when (Auxiliar().mensajeServidor(solicitud)) {
                 0 -> print("0")
                 -1 -> {
-                    val listaChallenge = LinkedList<com.example.clases.Challenge>()
                     for (i in 0 until solicitud.length()) {
-                        listaChallenge.add(Auxiliar().objectoChallenge(solicitud.getJSONObject(i)))
-                        println(listaChallenge.last.toString())
-                    }
-
-                    tablaDestacados.setColumnStretchable(1,true)
-
-                    listaChallenge.forEach {
-                        val img = ImageButton(this@principal)
-                        Picasso.get()
-                                .load(it.url)
-                                .resize(350, 250)
-                                .centerCrop()
-                                .into(img)
-                        tablaDestacados.addView(Auxiliar().retornarFilaTabla(img, estaActividad()))
-                        val arregloEnviar = arrayOf(it.code_challenges)
-                        img.setOnClickListener {
-                            val intent = Intent(this@principal, info_challenge::class.java)
+                        val challenge = Auxiliar().objectoChallenge(solicitud.getJSONObject(i))
+                        Auxiliar().colocarImagen(imagenesDestacados[i], challenge.url,
+                                textosCD[i], challenge.nombre)
+                        imagenesDestacados[i].setOnClickListener {
+                            val intent = Intent(estaActividad(), info_challenge::class.java)
+                            var arregloEnviar = arrayOf(textosCD[i].text)
                             intent.putExtra("arreglo", arregloEnviar)
                             startActivity(intent)
                         }
