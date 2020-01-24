@@ -55,7 +55,7 @@ class tus_intereses : AppCompatActivity() {
 
     fun intereses(){
         GlobalScope.launch {
-            obtenerChallengesInteresadosCt(2)
+            obtenerChallengesInteresadosCt(getString(R.string.idEstudiante).toInt())
         }
     }
     private suspend fun obtenerChallengesInteresadosCt(cat : Int) {

@@ -47,7 +47,7 @@ var configuracionMysql = "root:@tcp(127.0.0.1:3306)/groupchallenges"
 // var ip = "192.168.100.81"
 
 var puertoServidor = "9000"
-var ip = "192.168.100.81"
+var ip = "192.168.43.246"
 var contador = 0
 
 func main() {
@@ -244,7 +244,7 @@ func obtenerChallengesCategoria(w http.ResponseWriter, r *http.Request) {
 		// Unmarshal(fuenteDatos, seAlmacena) es para decodificar
 		json.Unmarshal(jsonData, &data)
 
-		resultados, err := db.Query("call challengesCategoria(?)", data["categoria"].(string))
+		resultados, err := db.Query("call challengesCategoria(?)", data["categoria"])
 
 		if err != nil {
 			// Como es error backend enviara 1 como respuesta

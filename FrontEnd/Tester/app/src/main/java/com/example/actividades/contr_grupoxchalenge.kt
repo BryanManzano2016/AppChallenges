@@ -34,7 +34,7 @@ class contr_grupoxchalenge : AppCompatActivity() {
     fun iniciarComponentesUI(id: Int){
         GlobalScope.launch { obtenerGruposChallengesCt(id) }
         botonagregar2.setOnClickListener {
-            val arregloEnviar = arrayOf("2")
+            val arregloEnviar = arrayOf(getString(R.string.idEstudiante).toInt())
             val intent = android.content.Intent(this, formulario::class.java)
             intent.putExtra("arreglo", arregloEnviar)
             startActivity(intent)

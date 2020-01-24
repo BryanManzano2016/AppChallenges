@@ -53,9 +53,41 @@ class busqueda : AppCompatActivity() {
     fun empezar(){
         GlobalScope.launch {
             CargarChallengesBusquedaCt()
+            //onClicked(checkBoxB)
+
         }
         inicializarCheckBox()
     }
+
+    fun inicializarCheckBox(){
+        checkBoxA.text="Ciencia"
+        checkBoxB.text="Desarrollo y Tecnologia"
+        checkBoxC.text="Ecología"
+        checkBoxD.text="Escritura"
+        checkBoxE.text="Robotica"
+        checkBoxF.text="Salud"
+        // Unicamente existe 6 categorias por defecto, el administrador es el encargado de unir categorias si es que lo hay
+        listaCheckBox.add(checkBoxA)
+        listaCheckBox.add(checkBoxB)
+        listaCheckBox.add(checkBoxC)
+        listaCheckBox.add(checkBoxD)
+        listaCheckBox.add(checkBoxE)
+        listaCheckBox.add(checkBoxF)
+
+    }
+
+
+
+    private suspend fun onClicked(checkB: CheckBox){
+        checkB.setOnClickListener {
+             GlobalScope.launch {
+                 obtenerChallengesCategoriaCt(checkB.text.toString())
+             }
+                }
+        }
+
+
+
 
 
     private suspend fun CargarChallengesBusquedaCt() {
@@ -115,9 +147,29 @@ class busqueda : AppCompatActivity() {
                     for (i in 0 until resultadoSolicitud.length()) {
                         listaChallenge.add(Auxiliar().objectoChallenge(resultadoSolicitud.getJSONObject(i)))
                     }
-                    var cadena = ""
-                    listaChallenge.forEach { cadena += it.nombre + "\n" }
-                    print(cadena)
+                    tableLayout2.setColumnStretchable(1,true)
+                    tableLayout2.removeAllViews()
+                    listaChallenge.forEach {
+                        val img= ImageButton(this@busqueda)
+                        val lineal= LinearLayout(this@busqueda)
+                        lineal.setHorizontalGravity(2)
+                        lineal.setVerticalGravity(10)
+                        Picasso.get()
+                                .load(it.url)
+                                .resize(250, 150)
+                                .centerCrop()
+                                .into(img)
+                        lineal.addView(img)
+                        tableLayout2.addView(lineal)
+                        val arregloEnviar = arrayOf(it.code_challenges)
+                        img.setOnClickListener {
+                            val intent = android.content.Intent(this@busqueda, com.example.actividades.info_challenge::class.java)
+
+                            intent.putExtra("arreglo", arregloEnviar)
+                            startActivity(intent)
+                        }
+
+                    }
                 }
             }
         }
@@ -139,28 +191,11 @@ class busqueda : AppCompatActivity() {
         return withContext(Dispatchers.Default) {
             val solicitud = Auxiliar().solicitudHttpPost(
                     Auxiliar().obtener_Ip() + "obtenerChallengesCategoria",
-                    "{\"categoria\":\""+cat+"\"\"}")
+                    "{\"categoria\":$cat}"
+            )
             return@withContext JSONArray(Auxiliar().respuestaString(solicitud.body()))
         }
     }
 
- fun inicializarCheckBox(){
-     checkBoxA.text="Ciencia"
-     checkBoxB.text="Desarrollo y Tecnologia"
-     checkBoxC.text="Ecología"
-     checkBoxD.text="Escritura"
-     checkBoxE.text="Robotica"
-     checkBoxF.text="Salud"
-    // Unicamente existe 6 categorias por defecto, el administrador es el encargado de unir categorias si es que lo hay
-     listaCheckBox.add(checkBoxA)
-     listaCheckBox.add(checkBoxB)
-     listaCheckBox.add(checkBoxC)
-     listaCheckBox.add(checkBoxD)
-     listaCheckBox.add(checkBoxE)
-     listaCheckBox.add(checkBoxF)
- }
-    fun colgarCheckBox(a: CheckBox,b: CheckBox,c: CheckBox,d: CheckBox, e: CheckBox, f: CheckBox){
 
-
-    }
 }
