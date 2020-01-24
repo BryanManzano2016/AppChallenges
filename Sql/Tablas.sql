@@ -55,9 +55,9 @@ CREATE TABLE IF NOT EXISTS Challenge(
 
 CREATE TABLE IF NOT EXISTS Group_Challenges(
 	code_challenges INT,
-	group_challenges_ID INT,
-	FOREIGN KEY (group_challenges_ID) REFERENCES group_by_challenge(group_challenges_ID),
-	FOREIGN KEY (code_challenges) REFERENCES Challenge(code_challenges)
+	group_challenges_ID INT,	
+	FOREIGN KEY (code_challenges) REFERENCES Challenge(code_challenges),
+    FOREIGN KEY (group_challenges_ID) REFERENCES group_by_challenge(group_challenges_ID)
 );
 
 CREATE TABLE IF NOT EXISTS Confirmation(

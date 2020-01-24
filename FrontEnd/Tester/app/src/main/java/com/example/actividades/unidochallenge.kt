@@ -17,7 +17,7 @@ class unidochallenge : AppCompatActivity() {
 
     fun iniciarEventos(){
         val arregloRecibido = intent?.getStringArrayExtra("arreglo")
-        irGrupos.setOnClickListener {
+        irGrupos2.setOnClickListener {
             val intent = Intent(this, contr_grupoxchalenge::class.java)
             println("*********** ${arregloRecibido?.get(0)}")
             var arregloEnviar = arrayOf(arregloRecibido?.get(0))

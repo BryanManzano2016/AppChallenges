@@ -13,8 +13,14 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".tusgrupos">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
-        <activity android:name=".formulario"/>
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".formulario" />
         <activity android:name=".unidochallenge" />
         <activity android:name=".info_challenge" />
         <activity android:name=".tus_intereses" />
@@ -22,13 +28,13 @@
         <activity android:name=".principal">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity android:name=".contr_grupoxchalenge" />
         <activity android:name=".controlador_pall_infogrupo" />
         <activity android:name=".FiltrarChallenge" />
-
     </application>
 
 </manifest>

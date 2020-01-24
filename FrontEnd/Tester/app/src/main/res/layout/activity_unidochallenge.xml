@@ -68,7 +68,7 @@
         app:layout_constraintGuide_percent="0.13" />
 
     <ImageView
-        android:id="@+id/imageView6"
+        android:id="@+id/meGusta"
         android:layout_width="54dp"
         android:layout_height="48dp"
         android:layout_marginStart="60dp"
@@ -79,7 +79,7 @@
         app:srcCompat="@drawable/me_encanta" />
 
     <ImageView
-        android:id="@+id/imageView7"
+        android:id="@+id/informacionChallenge"
         android:layout_width="52dp"
         android:layout_height="54dp"
         android:layout_marginStart="64dp"
@@ -90,7 +90,7 @@
         app:srcCompat="@drawable/informacion" />
 
     <ImageView
-        android:id="@+id/irGrupos"
+        android:id="@+id/irGrupos2"
         android:layout_width="79dp"
         android:layout_height="69dp"
         app:layout_constraintBottom_toBottomOf="parent"
