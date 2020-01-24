@@ -7,6 +7,7 @@ DROP PROCEDURE IF EXISTS verChallengesRecientes;
 DROP PROCEDURE IF EXISTS challengesCategoria;
 DROP PROCEDURE IF EXISTS CreatorConfirmation;
 DROP PROCEDURE IF EXISTS CreatorGroup_student;
+DROP PROCEDURE IF EXISTS estaInscritoChallenge;
 
 -- FRANSCISCO
 DROP PROCEDURE IF EXISTS CreatorGroup;
@@ -194,6 +195,20 @@ begin
 		end if;	        
 end;
 %% Delimiter ;
+
+-- validar inscripcion en challenge
+ Delimiter %%
+create procedure estaInscritoChallenge(in idChallenge varchar(60), in idEstudiante varchar(50))
+begin
+		if not exists ( select 1 from confirmation cf 
+			where cf.code_challenges = idChallenge and cf.student_ID = idEstudiante) then     		
+			select 2;			
+		else
+			select 1;
+		end if;	        
+end;
+%% Delimiter ;
+
 /* ------------------------------------------------------------------ */ 
 /*
 
