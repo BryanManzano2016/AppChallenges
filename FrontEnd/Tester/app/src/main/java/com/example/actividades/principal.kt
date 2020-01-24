@@ -164,34 +164,6 @@ class principal : AppCompatActivity() {
         }
     }
 
-    // OBTENER CHALLENGES POR CATEGORIA
-    private suspend fun obtenerChallengesCategoriaCt(cat : String) {
-        val resultadoSolicitud = obtenerChallengesCategoria(cat)
-        withContext(Dispatchers.Main) {
-            when (Auxiliar().mensajeServidor(resultadoSolicitud)) {
-                0 -> print("0")
-                -1 -> {
-                    val listaChallenge = LinkedList<com.example.clases.Challenge>()
-                    for (i in 0 until resultadoSolicitud.length()) {
-                        listaChallenge.add(Auxiliar().objectoChallenge(resultadoSolicitud.getJSONObject(i)))
-                    }
-                    var cadena = ""
-                    listaChallenge.forEach { cadena += it.nombre + "\n" }
-                    print(cadena)
-                }
-            }
-        }
-    }
-
-    private suspend fun obtenerChallengesCategoria(cat:String ): JSONArray {
-        return withContext(Dispatchers.Default) {
-            val solicitud = Auxiliar().solicitudHttpPost(
-                    Auxiliar().obtener_Ip() + "obtenerChallengesCategoria",
-                    "{\"categoria\":\""+cat+"\"\"}")
-            return@withContext JSONArray(Auxiliar().respuestaString(solicitud.body()))
-        }
-    }
-
     // DAR ME GUSTA
     private suspend fun meEncantaCt() {
         val resultadoSolicitud = meEncanta()
