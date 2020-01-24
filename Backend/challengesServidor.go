@@ -55,7 +55,15 @@ var configuracionMysql = "root:root@tcp(127.0.0.1:3306)/groupchallenges"
 // var ip = "192.168.100.81"
 
 var puertoServidor = "9000"
+<<<<<<< HEAD
 var ip = "192.168.100.133"
+=======
+<<<<<<< HEAD
+var ip = "192.168.200.11"
+=======
+var ip = "192.168.100.81"
+>>>>>>> efd3be86136fd318309c9413a8fbd00b5e0f279c
+>>>>>>> 9365e97974d6e77945b65829807f802f80d82f95
 var contador = 0
 
 func main() {
