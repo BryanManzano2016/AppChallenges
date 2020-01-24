@@ -34,6 +34,14 @@ type Grupos struct {
 	UrlWp             string `json:"url_whatsapp"`
 }
 
+type Confirmacion struct {
+	Id           int `json:"id"`
+	Disponible   int `json:"disponible"`
+	ChallengesID int `json:"idChallenges"`
+	MeGusta      int `json: "meGusta"`
+	Estudiante   int `json:"estudiante"`
+}
+
 type Respuesta struct {
 	Resp int `json:"respuesta"`
 }
@@ -41,13 +49,13 @@ type Respuesta struct {
 // !!! user:password@tcp(127.0.0.1:3306)/database ¡¡¡
 
 // var configuracionMysql = "root:@tcp(127.0.0.1:3306)/groupchallenges"
-var configuracionMysql = "root:@tcp(127.0.0.1:3306)/groupchallenges"
+var configuracionMysql = "root:root@tcp(127.0.0.1:3306)/groupchallenges"
 
 // var ip = "192.168.200.11"
 // var ip = "192.168.100.81"
 
 var puertoServidor = "9000"
-var ip = "192.168.100.81"
+var ip = "192.168.100.133"
 var contador = 0
 
 func main() {
@@ -60,6 +68,7 @@ func main() {
 	http.HandleFunc("/obtenerChallengesCategoria", obtenerChallengesCategoria)
 	http.HandleFunc("/unirseChallenge", unirseChallenge)
 	http.HandleFunc("/unirseGrupo", unirseGrupo)
+
 	http.HandleFunc("/obtenerGruposChallenges", obtenerGruposChallenges)
 	http.HandleFunc("/meEncantaChallenge", meEncantaChallenge)
 	http.HandleFunc("/gruposEstudiante", gruposEstudiante)
@@ -68,7 +77,7 @@ func main() {
 	// http.HandleFunc("/menosEncantaChallenge", menosEncantaChallenge)
 	http.HandleFunc("/crearChallenge", crearChallenge)
 	http.HandleFunc("/obtenerChallengesInteresados", obtenerChallengesInteresados)
-	http.HandleFunc("/estaInscritoChallenge", estaInscritoChallenge)
+	http.HandleFunc("/returnConfirmation", returnConfirmation)
 	// En lugar de localhost puede ir la ip del servidor. Ademas es obligatorio desbloquear el puerto 9000
 	log.Fatal(http.ListenAndServe(ip+":"+puertoServidor, nil))
 }
@@ -301,16 +310,30 @@ func unirseChallenge(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			json.NewEncoder(w).Encode(respuestaArreglo(0))
 		} else {
+			// Arreglo con 0 elementos
+			var lista = make([]Confirmacion, 0)
+			// Recorre el resultado de consulta
 			for resultados.Next() {
-				var respuesta int
-				err = resultados.Scan(&respuesta)
+				var id int
+				var disponible int
+				var challengesId int
+				var meGusta int
+				var estudiante int
+				// Guardar los campos en las variables
+				err = resultados.Scan(&id, &disponible, &challengesId,
+					&meGusta, &estudiante)
+				// Crear el struct y luego añadir al array
+				confirmacion := Confirmacion{Id: id, Disponible: disponible, ChallengesID: challengesId,
+					MeGusta: meGusta, Estudiante: estudiante}
+				lista = append(lista, confirmacion)
 				if err != nil {
+					// Igualmente, como es error backend enviara 1 como respuesta
 					json.NewEncoder(w).Encode(respuestaArreglo(0))
-				} else {
-					json.NewEncoder(w).Encode(respuestaArreglo(respuesta))
 				}
-				break // Solo necesita la 1ra fila del resultSet porque es un nro confirmando operacion
+				break
 			}
+			// Codifica y responde al cliente de una vez
+			json.NewEncoder(w).Encode(lista)
 		}
 	}
 }
@@ -444,6 +467,7 @@ func obtenerChallengesInteresados(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+// Debido a la base de datos -1 dira que el servidor esta caido
 func meEncantaChallenge(w http.ResponseWriter, r *http.Request) {
 
 	fmt.Println("meEncantaChallenge")
@@ -453,7 +477,7 @@ func meEncantaChallenge(w http.ResponseWriter, r *http.Request) {
 	db, err := sql.Open("mysql", configuracionMysql)
 
 	if err != nil || err2 != nil {
-		json.NewEncoder(w).Encode(respuestaArreglo(0))
+		json.NewEncoder(w).Encode(respuestaArreglo(-1))
 	} else {
 		defer db.Close()
 
@@ -464,15 +488,16 @@ func meEncantaChallenge(w http.ResponseWriter, r *http.Request) {
 		resultados, err := db.Query("call MasEncanta(?, ?)", data["idChallenge"], data["idEstudiante"])
 
 		if err != nil {
-			json.NewEncoder(w).Encode(respuestaArreglo(0))
+			json.NewEncoder(w).Encode(respuestaArreglo(-1))
 		} else {
 			for resultados.Next() {
 				var respuesta int
 				err = resultados.Scan(&respuesta)
 
 				if err != nil {
-					json.NewEncoder(w).Encode(respuestaArreglo(0))
+					json.NewEncoder(w).Encode(respuestaArreglo(-1))
 				} else {
+					fmt.Println(respuesta)
 					json.NewEncoder(w).Encode(respuestaArreglo(respuesta))
 				}
 				break // Solo necesita la 1ra fila del resultSet porque es un nro confirmando operacion
@@ -624,6 +649,9 @@ func crearChallenge(w http.ResponseWriter, r *http.Request) {
 			for results1.Next() {
 				var respuesta int
 				err1 = results1.Scan(&respuesta)
+
+				fmt.Println(respuesta)
+
 				if err1 != nil {
 					json.NewEncoder(w).Encode(respuestaArreglo(0))
 				} else {
@@ -635,16 +663,16 @@ func crearChallenge(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func estaInscritoChallenge(w http.ResponseWriter, r *http.Request) {
+func returnConfirmation(w http.ResponseWriter, r *http.Request) {
 
-	fmt.Println("estaInscritoChallenge")
+	fmt.Println("returnConfirmation")
 
 	jsonRecibido, err2 := ioutil.ReadAll(r.Body)
 	defer r.Body.Close()
 	db, err := sql.Open("mysql", configuracionMysql)
 
 	if err != nil || err2 != nil {
-		json.NewEncoder(w).Encode(respuestaArreglo(0))
+		json.NewEncoder(w).Encode(respuestaArreglo(-1))
 	} else {
 		defer db.Close()
 
@@ -653,23 +681,39 @@ func estaInscritoChallenge(w http.ResponseWriter, r *http.Request) {
 		json.Unmarshal([]byte(jsonData), &data)
 
 		fmt.Println(data)
-		results1, err1 := db.Query("call estaInscritoChallenge(?,?)", data["idChallenge"], data["idEstudiante"])
+		resultados, err := db.Query("call returnConfirmation(?,?)",
+			data["idChallenge"], data["idEstudiante"])
 
 		if err != nil {
-			json.NewEncoder(w).Encode(respuestaArreglo(0))
+			json.NewEncoder(w).Encode(respuestaArreglo(-1))
 		} else {
-			for results1.Next() {
-				var respuesta int
-				err1 = results1.Scan(&respuesta)
+			// Arreglo con 0 elementos
+			var lista = make([]Confirmacion, 0)
+			// Recorre el resultado de consulta
+			for resultados.Next() {
+				var id int
+				var disponible int
+				var challengesId int
+				var meGusta int
+				var estudiante int
+				// Guardar los campos en las variables
+				err = resultados.Scan(&id, &disponible, &challengesId,
+					&meGusta, &estudiante)
+				// Crear el struct y luego añadir al array
+				confirmacion := Confirmacion{Id: id, Disponible: disponible, ChallengesID: challengesId,
+					MeGusta: meGusta, Estudiante: estudiante}
 
-				fmt.Println(respuesta)
-				if err1 != nil {
-					json.NewEncoder(w).Encode(respuestaArreglo(0))
-				} else {
-					json.NewEncoder(w).Encode(respuestaArreglo(respuesta))
+				fmt.Println(confirmacion)
+				lista = append(lista, confirmacion)
+				if err != nil {
+					// Igualmente, como es error backend enviara 1 como respuesta
+					lista = append(lista, Confirmacion{0, 0, 0, 0, 0})
+					json.NewEncoder(w).Encode(lista)
 				}
 				break
 			}
+			// Codifica y responde al cliente de una vez
+			json.NewEncoder(w).Encode(lista)
 		}
 	}
 }

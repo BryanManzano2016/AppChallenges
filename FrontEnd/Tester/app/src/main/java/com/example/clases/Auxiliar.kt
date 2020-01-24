@@ -11,8 +11,9 @@ import kotlin.contracts.Returns
 
 class Auxiliar {
 
-    val direccion_ip= "http://192.168.100.81:9000/"
+    // val direccion_ip= "http://192.168.100.81:9000/"
     // val direccion_ip= "http://192.168.200.11:9000/"
+    val direccion_ip= "http://192.168.100.133:9000/"
 
     fun obtener_Ip(): String {
         return direccion_ip.toString()
@@ -63,6 +64,16 @@ class Auxiliar {
                 objeto.get("fechaInicio").toString(),objeto.get("code_challenges").toString()
         )
     }
+    // Crear challenge a a partir d eun JSONObject
+    fun objectoConfirmacion( objeto: JSONObject ): Confirmacion{
+        return Confirmacion(
+                objeto.getInt("id"), objeto.getInt("disponible"),
+                objeto.getInt("idChallenges"), objeto.getInt("MeGusta"),
+                objeto.getInt("estudiante")
+        )
+    }
+
+
 
     fun objetoGrupo(objeto: JSONObject): Grupos{
             return Grupos(

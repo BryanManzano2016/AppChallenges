@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.example.clases.Auxiliar
 import com.example.clases.Challenge
+import com.example.clases.Confirmacion
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.android.synthetic.main.activity_principal.*
 import kotlinx.coroutines.Dispatchers
@@ -28,16 +29,20 @@ class principal : AppCompatActivity() {
     private var imagenesDestacados = LinkedList<ImageButton>()
     private var textosCR = LinkedList<TextView>()
     private var textosCD = LinkedList<TextView>()
-    private var challengeSeleccionado = ""
+    private lateinit var challengeSelecc: Challenge
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_principal)
 
         inicializarComponentesGUI()
-        inicializarEventos()
 
         bottom_navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        inicializarComponentesGUI()
     }
 
     private val mOnNavigationItemSelectedListener = BottomNavigationView
@@ -60,26 +65,6 @@ class principal : AppCompatActivity() {
     fun estaActividad(): principal {
         return this
     }
-
-    private fun remplazarfragmento(fragment: Fragment){
-        val fragmentTransition= supportFragmentManager.beginTransaction()
-        fragmentTransition.replace(R.id.fragmentoContenedor,fragment)
-        fragmentTransition.commit()
-    }
-
-    fun inicializarEventos() {
-        /*
-        contenedoresImagenes().run { forEach( it.setOnClickListener {
-                    val intent = Intent(this, info_challenge::class.java)
-                    var arregloEnviar = arrayOf("12")
-                    intent.putExtra("arreglo", arregloEnviar)
-                    startActivity(intent)
-                }
-            )
-        }
-        */
-    }
-
 
     fun inicializarComponentesGUI() {
         imagenesDestacados.clear()
@@ -114,11 +99,10 @@ class principal : AppCompatActivity() {
                         Auxiliar().colocarImagen(imagenesRecientes[i], challenge.url,
                                 textosCR[i], challenge.nombre)
                         imagenesRecientes[i].setOnClickListener {
-                            challengeSeleccionado = challenge.code_challenges
-                            GlobalScope.launch {
-                                verificarSubscripcionChallege(challenge.code_challenges.toInt(),
-                                        getString(R.string.idEstudiante).toInt())
-                            }
+                            val intent = Intent(estaActividad(), info_challenge::class.java)
+                            val arregloEnviar = arrayOf(challenge.code_challenges)
+                            intent.putExtra("arreglo", arregloEnviar)
+                            startActivity(intent)
                         }
                     }
                 }
@@ -137,11 +121,10 @@ class principal : AppCompatActivity() {
                         Auxiliar().colocarImagen(imagenesDestacados[i], challenge.url,
                                 textosCD[i], challenge.nombre)
                         imagenesDestacados[i].setOnClickListener {
-                            challengeSeleccionado = challenge.code_challenges
-                            GlobalScope.launch {
-                                verificarSubscripcionChallege(challenge.code_challenges.toInt(),
-                                        getString(R.string.idEstudiante).toInt())
-                            }
+                            val intent = Intent(estaActividad(), info_challenge::class.java)
+                            val arregloEnviar = arrayOf(challenge.code_challenges)
+                            intent.putExtra("arreglo", arregloEnviar)
+                            startActivity(intent)
                         }
                     }
                 }
@@ -168,37 +151,6 @@ class principal : AppCompatActivity() {
             return@withContext JSONArray(respuesta)
         }
     }
-
-    private suspend fun verificarSubscripcionChallege(idChallenge: Int, idEstudiante: Int){
-        val solicitud = subscripcionChallege(idChallenge, idEstudiante)
-        withContext(Dispatchers.Main) {
-            val arregloEnviar = arrayOf(challengeSeleccionado)
-            when (Auxiliar().mensajeServidor(solicitud)) {
-                0 -> print("Servidor caido")
-                1 -> {
-                    val intent = Intent(estaActividad(), unidochallenge::class.java)
-                    intent.putExtra("arreglo", arregloEnviar)
-                    startActivity(intent)
-                }
-                2 -> {
-                    val intent = Intent(estaActividad(), info_challenge::class.java)
-                    intent.putExtra("arreglo", arregloEnviar)
-                    startActivity(intent)
-                }
-            }
-        }
-    }
-
-    private suspend fun subscripcionChallege(idChallenge: Int, idEstudiante: Int): JSONArray {
-        return withContext(Dispatchers.Default) {
-            val solicitud = Auxiliar().solicitudHttpPost(
-                    Auxiliar().obtener_Ip() + "estaInscritoChallenge",
-                    "{\"idChallenge\":$idChallenge, \"idEstudiante\": $idEstudiante}")
-            return@withContext JSONArray(Auxiliar().respuestaString(solicitud.body()))
-        }
-    }
-
-
 
     // OBTENER CHALLENGES POR CATEGORIA
     private suspend fun obtenerChallengesCategoriaCt(cat : String) {
@@ -227,27 +179,4 @@ class principal : AppCompatActivity() {
             return@withContext JSONArray(Auxiliar().respuestaString(solicitud.body()))
         }
     }
-
-    // DAR ME GUSTA
-    private suspend fun meEncantaCt() {
-        val resultadoSolicitud = meEncanta()
-        withContext(Dispatchers.Main) {
-            when (Auxiliar().mensajeServidor(resultadoSolicitud)) {
-                0 -> print("0")
-                1 -> print("1")
-                2 -> print("2")
-            }
-        }
-    }
-
-    private suspend fun meEncanta(): JSONArray {
-        return withContext(Dispatchers.Default) {
-            val solicitud = Auxiliar().solicitudHttpPost(
-                    Auxiliar().obtener_Ip() + "meEncantaChallenge",
-                    "{\"idChallenge\":3}")
-            return@withContext JSONArray(Auxiliar().respuestaString(solicitud.body()))
-        }
-    }
-
-
 }
