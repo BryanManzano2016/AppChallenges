@@ -72,9 +72,9 @@
         android:layout_width="54dp"
         android:layout_height="48dp"
         android:layout_marginStart="60dp"
-        app:layout_constraintBottom_toBottomOf="@+id/imageView2"
+        app:layout_constraintBottom_toBottomOf="@+id/irGrupos"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/imageView2"
+        app:layout_constraintTop_toTopOf="@+id/irGrupos"
         app:layout_constraintVertical_bias="0.38"
         app:srcCompat="@drawable/me_encanta" />
 
@@ -83,14 +83,14 @@
         android:layout_width="52dp"
         android:layout_height="54dp"
         android:layout_marginStart="64dp"
-        app:layout_constraintBottom_toBottomOf="@+id/imageView2"
-        app:layout_constraintStart_toEndOf="@+id/imageView2"
-        app:layout_constraintTop_toTopOf="@+id/imageView2"
+        app:layout_constraintBottom_toBottomOf="@+id/irGrupos"
+        app:layout_constraintStart_toEndOf="@+id/irGrupos"
+        app:layout_constraintTop_toTopOf="@+id/irGrupos"
         app:layout_constraintVertical_bias="0.6"
         app:srcCompat="@drawable/informacion" />
 
     <ImageView
-        android:id="@+id/imageView2"
+        android:id="@+id/irGrupos"
         android:layout_width="79dp"
         android:layout_height="69dp"
         app:layout_constraintBottom_toBottomOf="parent"
