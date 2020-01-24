@@ -7,9 +7,9 @@
     tools:context=".info_challenge">
 
     <TextView
-        android:id="@+id/textnombre"
+        android:id="@+id/textnomb"
         android:layout_width="270dp"
-        android:layout_height="66dp"
+        android:layout_height="88dp"
         android:text="Space Challenge"
         android:textColor="#133F76"
         android:textSize="40dp"
@@ -50,14 +50,15 @@
         app:layout_constraintGuide_end="79dp" />
 
     <ImageView
-        android:id="@+id/imageView5"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:id="@+id/imageVie"
+        android:layout_width="197dp"
+        android:layout_height="248dp"
         app:layout_constraintBottom_toTopOf="@+id/guideline14"
         app:layout_constraintEnd_toStartOf="@+id/guideline13"
-        app:layout_constraintHorizontal_bias="0.278"
+        app:layout_constraintHorizontal_bias="0.464"
         app:layout_constraintStart_toStartOf="@+id/guideline9"
         app:layout_constraintTop_toTopOf="@+id/guideline15"
+        app:layout_constraintVertical_bias="0.265"
         app:srcCompat="@drawable/space" />
 
     <androidx.constraintlayout.widget.Guideline
@@ -71,7 +72,7 @@
         android:id="@+id/meGustaInfo"
         android:layout_width="54dp"
         android:layout_height="48dp"
-        android:layout_marginEnd="28dp"
+        android:layout_marginEnd="56dp"
         android:background="@drawable/me_encanta"
         app:layout_constraintBottom_toBottomOf="@+id/unirseGrupo"
         app:layout_constraintEnd_toStartOf="@+id/unirseGrupo"
@@ -82,11 +83,11 @@
         android:id="@+id/informacionChallenge"
         android:layout_width="52dp"
         android:layout_height="58dp"
-        android:layout_marginStart="32dp"
+        android:layout_marginStart="52dp"
         app:layout_constraintBottom_toBottomOf="@+id/unirseGrupo"
         app:layout_constraintStart_toEndOf="@+id/unirseGrupo"
         app:layout_constraintTop_toTopOf="@+id/unirseGrupo"
-        app:layout_constraintVertical_bias="1.0"
+        app:layout_constraintVertical_bias="0.0"
         app:srcCompat="@drawable/informacion" />
 
     <ImageButton
@@ -113,5 +114,50 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/iconretorno" />
+
+    <TextView
+        android:id="@+id/categoriatext"
+        android:layout_width="217dp"
+        android:layout_height="39dp"
+        android:layout_marginTop="32dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text="categoria"
+        android:textStyle="bold|italic"
+        android:typeface="sans"
+        app:fontFamily="cursive"
+        app:layout_constraintBottom_toTopOf="@+id/fechatext"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.463"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageVie"
+        app:autoSizeTextType="uniform"
+        app:autoSizeMinTextSize="12sp"
+        app:autoSizeMaxTextSize="100sp"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <TextView
+        android:id="@+id/fechatext"
+        android:layout_width="226dp"
+        android:layout_height="41dp"
+        android:layout_marginEnd="96dp"
+        android:layout_marginBottom="4dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text="fecha"
+        android:textStyle="bold|italic"
+        android:typeface="sans"
+        app:fontFamily="cursive"
+        app:layout_constraintBottom_toTopOf="@+id/guideline14"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageVie"
+        app:autoSizeTextType="uniform"
+        app:autoSizeMinTextSize="12sp"
+        app:autoSizeMaxTextSize="100sp"
+
+
+        app:layout_constraintVertical_bias="0.9" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

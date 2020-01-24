@@ -36,13 +36,13 @@ class formulario : AppCompatActivity() {
         return withContext(Dispatchers.Default) {
             val solicitud = Auxiliar().solicitudHttpPost(
                     Auxiliar().obtener_Ip() + "crearGrupo",
-                    "{\"nombreGrupo\":${nombreGrupo.toString()}, \"Descripcion\": ${Descripcion.toString()}, \"url_wp\": ${url_wp.toString()}}")
+                    "{\"nombreGrupo\":${nombreGrupo}, \"Descripcion\": ${Descripcion}, \"url_wp\": ${url_wp}}")
             return@withContext JSONArray(Auxiliar().respuestaString(solicitud.body()))
         }
     }
 
     private suspend fun verificarCrearGrupo(nombreGrupo: String, Descripcion: String, url_wp: String){
-        val solicitud = llenarFormulario(nombreGrupo.toString(),Descripcion.toString(),url_wp.toString())
+        val solicitud = llenarFormulario(nombreGrupo,Descripcion,url_wp)
         withContext(Dispatchers.Main) {
 
             val arregloEnviar = arrayOf("2")

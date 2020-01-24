@@ -71,22 +71,21 @@
         android:id="@+id/meGusta"
         android:layout_width="54dp"
         android:layout_height="48dp"
-        android:layout_marginStart="60dp"
-        app:layout_constraintBottom_toBottomOf="@+id/irGrupos"
+        app:layout_constraintBottom_toBottomOf="@+id/irGrupos2"
+        app:layout_constraintEnd_toStartOf="@+id/irGrupos2"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/irGrupos"
-        app:layout_constraintVertical_bias="0.38"
+        app:layout_constraintTop_toTopOf="@+id/guideline14"
         app:srcCompat="@drawable/me_encanta" />
 
     <ImageView
         android:id="@+id/informacionChallenge"
         android:layout_width="52dp"
         android:layout_height="54dp"
-        android:layout_marginStart="64dp"
-        app:layout_constraintBottom_toBottomOf="@+id/irGrupos"
-        app:layout_constraintStart_toEndOf="@+id/irGrupos"
-        app:layout_constraintTop_toTopOf="@+id/irGrupos"
-        app:layout_constraintVertical_bias="0.6"
+        app:layout_constraintBottom_toBottomOf="@+id/irGrupos2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/irGrupos2"
+        app:layout_constraintTop_toTopOf="@+id/irGrupos2"
+        app:layout_constraintVertical_bias="0.266"
         app:srcCompat="@drawable/informacion" />
 
     <ImageView
@@ -123,8 +122,11 @@
         android:id="@+id/textView3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="65dp"
         android:text="1830"
-        tools:layout_editor_absoluteX="78dp"
-        tools:layout_editor_absoluteY="579dp" />
+        app:layout_constraintEnd_toStartOf="@+id/irGrupos2"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/meGusta" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
